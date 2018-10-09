@@ -19,3 +19,4 @@ sdk/sdk/include
 sdk/sdk/src/arch/macOS
 sdk/sdk/src/arch/linux
 sdk/sdk/src/arch/win32
+include

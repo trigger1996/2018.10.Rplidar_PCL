@@ -1,3 +1,6 @@
+include/config.h
+include/lidar_driver.h
+lidar_driver.cpp
 main.cpp
 sdk/sdk/src/sdkcommon.h
 sdk/sdk/src/rplidar_driver_TCP.h

@@ -36,6 +36,7 @@ include_directories(
 add_executable(pcl_test
     ${lidar_src}
 
+    lidar_driver.cpp
     main.cpp
 )
 

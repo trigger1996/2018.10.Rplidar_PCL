@@ -123,6 +123,33 @@ pcl_test/fast:
 	$(MAKE) -f CMakeFiles/pcl_test.dir/build.make CMakeFiles/pcl_test.dir/build
 .PHONY : pcl_test/fast
 
+lidar_driver.o: lidar_driver.cpp.o
+
+.PHONY : lidar_driver.o
+
+# target to build an object file
+lidar_driver.cpp.o:
+	$(MAKE) -f CMakeFiles/pcl_test.dir/build.make CMakeFiles/pcl_test.dir/lidar_driver.cpp.o
+.PHONY : lidar_driver.cpp.o
+
+lidar_driver.i: lidar_driver.cpp.i
+
+.PHONY : lidar_driver.i
+
+# target to preprocess a source file
+lidar_driver.cpp.i:
+	$(MAKE) -f CMakeFiles/pcl_test.dir/build.make CMakeFiles/pcl_test.dir/lidar_driver.cpp.i
+.PHONY : lidar_driver.cpp.i
+
+lidar_driver.s: lidar_driver.cpp.s
+
+.PHONY : lidar_driver.s
+
+# target to generate assembly for a file
+lidar_driver.cpp.s:
+	$(MAKE) -f CMakeFiles/pcl_test.dir/build.make CMakeFiles/pcl_test.dir/lidar_driver.cpp.s
+.PHONY : lidar_driver.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -294,6 +321,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... pcl_test"
 	@echo "... edit_cache"
+	@echo "... lidar_driver.o"
+	@echo "... lidar_driver.i"
+	@echo "... lidar_driver.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
