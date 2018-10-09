@@ -37,6 +37,7 @@ add_executable(pcl_test
     ${lidar_src}
 
     lidar_driver.cpp
+    registration_icp_ndt.cpp
     main.cpp
 )
 

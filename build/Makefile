@@ -177,6 +177,33 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/pcl_test.dir/build.make CMakeFiles/pcl_test.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+registration_icp_ndt.o: registration_icp_ndt.cpp.o
+
+.PHONY : registration_icp_ndt.o
+
+# target to build an object file
+registration_icp_ndt.cpp.o:
+	$(MAKE) -f CMakeFiles/pcl_test.dir/build.make CMakeFiles/pcl_test.dir/registration_icp_ndt.cpp.o
+.PHONY : registration_icp_ndt.cpp.o
+
+registration_icp_ndt.i: registration_icp_ndt.cpp.i
+
+.PHONY : registration_icp_ndt.i
+
+# target to preprocess a source file
+registration_icp_ndt.cpp.i:
+	$(MAKE) -f CMakeFiles/pcl_test.dir/build.make CMakeFiles/pcl_test.dir/registration_icp_ndt.cpp.i
+.PHONY : registration_icp_ndt.cpp.i
+
+registration_icp_ndt.s: registration_icp_ndt.cpp.s
+
+.PHONY : registration_icp_ndt.s
+
+# target to generate assembly for a file
+registration_icp_ndt.cpp.s:
+	$(MAKE) -f CMakeFiles/pcl_test.dir/build.make CMakeFiles/pcl_test.dir/registration_icp_ndt.cpp.s
+.PHONY : registration_icp_ndt.cpp.s
+
 sdk/src/arch/linux/net_serial.o: sdk/src/arch/linux/net_serial.cpp.o
 
 .PHONY : sdk/src/arch/linux/net_serial.o
@@ -327,6 +354,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... registration_icp_ndt.o"
+	@echo "... registration_icp_ndt.i"
+	@echo "... registration_icp_ndt.s"
 	@echo "... sdk/src/arch/linux/net_serial.o"
 	@echo "... sdk/src/arch/linux/net_serial.i"
 	@echo "... sdk/src/arch/linux/net_serial.s"

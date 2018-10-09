@@ -6,6 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/ghost/src/slam/lidar/pcl_test/lidar_driver.cpp" "/home/ghost/src/slam/lidar/pcl_test/build/CMakeFiles/pcl_test.dir/lidar_driver.cpp.o"
   "/home/ghost/src/slam/lidar/pcl_test/main.cpp" "/home/ghost/src/slam/lidar/pcl_test/build/CMakeFiles/pcl_test.dir/main.cpp.o"
+  "/home/ghost/src/slam/lidar/pcl_test/registration_icp_ndt.cpp" "/home/ghost/src/slam/lidar/pcl_test/build/CMakeFiles/pcl_test.dir/registration_icp_ndt.cpp.o"
   "/home/ghost/src/slam/lidar/pcl_test/sdk/src/arch/linux/net_serial.cpp" "/home/ghost/src/slam/lidar/pcl_test/build/CMakeFiles/pcl_test.dir/sdk/src/arch/linux/net_serial.cpp.o"
   "/home/ghost/src/slam/lidar/pcl_test/sdk/src/arch/linux/net_socket.cpp" "/home/ghost/src/slam/lidar/pcl_test/build/CMakeFiles/pcl_test.dir/sdk/src/arch/linux/net_socket.cpp.o"
   "/home/ghost/src/slam/lidar/pcl_test/sdk/src/arch/linux/timer.cpp" "/home/ghost/src/slam/lidar/pcl_test/build/CMakeFiles/pcl_test.dir/sdk/src/arch/linux/timer.cpp.o"

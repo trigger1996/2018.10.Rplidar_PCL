@@ -39,4 +39,10 @@ typedef struct {
 
 } __scandot;
 
+typedef struct {
+    double x;
+    double y;
+    double z;
+} __vector3f;
+
 #endif // CONFIG_H
