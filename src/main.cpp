@@ -41,6 +41,9 @@ void imuqua_cb(const sensor_msgs::Imu& msg){
     Current_acc = msg.linear_acceleration;
 }
 
+void laser_imu_fusion(vector<__scandot> data, double roll, double pitch, double yaw);
+bool rotate_Grid2Grid(double &x, double &y, double &z, double roll, double pitch, double yaw);
+
 int main(int argc, char *argv[]) {
     __lidar *lidar = new __lidar;
     __registration_abs *reg = new __registration_icp_ndt;
@@ -121,15 +124,25 @@ int main(int argc, char *argv[]) {
 
         if (lidar->update_Data()) {
             if(lidar->get_Data().size() && lidar->get_LastData().size()) {
-                reg->set_Src_PointCloud(lidar->get_LastData());
-                reg->set_Ref_PointCloud(lidar->get_Data());
+                vector<__scandot> data, data_last;
+                data_last = lidar->get_LastData();
+                data = lidar->get_Data();
+
+                /// 数据预处理
+                laser_imu_fusion(data, Current_euler.x, Current_euler.y, Current_euler.z);// 利用飞控测得地磁偏航角锁定激光雷达的旋转，尝试获得更高的精度
+                laser_imu_fusion(data_last, Current_euler.x, Current_euler.y, Current_euler.z);
+
+                reg->set_Src_PointCloud(data_last);
+                reg->set_Ref_PointCloud(data);
 
                 reg->update();
 
                 dx += reg->get_dx();
                 dy += reg->get_dy();
 
-                cout << "dx: " << dx << " dy: " << dy << endl;      // cm
+                struct timeval t;
+                gettimeofday(&t, NULL);
+                cout << (double)t.tv_usec / 1000. << "dx: " << dx << " dy: " << dy << endl;      // cm
             }
         }
 
@@ -144,4 +157,59 @@ int main(int argc, char *argv[]) {
     delete lidar;
     delete reg;
     return 0;
-}	
+}
+
+void laser_imu_fusion(vector<__scandot> data, double roll, double pitch, double yaw) {
+    for (int i = 0; i < data.size(); i++) {
+        // 做倾角补偿
+        double x, y, z;
+        x = data[i].dst * cos(data[i].angle * 3.14 / M_PI);
+        y = data[i].dst * sin(data[i].angle * 3.14 / M_PI);
+        z = 0;
+        rotate_Grid2Grid(x, y, z, -roll, -pitch, -yaw); // Current_euler.x, Current_euler.y, data[i].angle * 3.14 / PI
+        data[i].dst = sqrt(x*x + y*y);
+
+        // 做旋转补偿
+        data[i].angle -= Current_euler.z * 180 / M_PI + 90.;
+        while (data[i].angle < 0)
+            data[i].angle += 360;
+        while (data[i].angle > 360)
+            data[i].angle -= 360;
+    }
+}
+
+bool rotate_Grid2Grid(double &x, double &y, double &z, double roll, double pitch, double yaw) {
+
+    double a, b, g;             // alpha, beta, gamma
+    MatrixXd C1, C2, C3;
+    MatrixXd X;
+    bool is_singular = false;
+
+    a = roll; b = pitch; g = yaw;
+
+    C1.resize(3, 3);
+    C1 << 1,            0,          0,
+          0,            cos(a),     sin(a),
+          0,           -sin(a),     cos(a);
+    C2.resize(3, 3);
+    C2 << cos(b),       0,         -sin(b),
+          0,            1,          0,
+          sin(b),       0,          cos(b);
+
+    C3.resize(3, 3);
+    C3 << cos(g),       sin(g),     0,
+         -sin(g),       cos(g),     0,
+          0,            0,          1;
+
+    X.resize(3, 1);
+    X   << x,
+           y,
+           z;
+
+    X = C3 * C2 * C1 * X;
+    x = X(0, 0);
+    y = X(1, 0);
+    z = X(2, 0);
+
+    return is_singular;
+}
