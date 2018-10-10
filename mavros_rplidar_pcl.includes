@@ -7,3 +7,8 @@ src/include
 src/sdk/src/arch/win32
 src
 src/sdk/src/hal
+src/iir1
+src/iir1/demo
+src/iir1/iir
+cmake_submodules
+src/iir1/test

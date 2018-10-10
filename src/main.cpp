@@ -1,3 +1,12 @@
+#include "include/config.h"
+#include <iostream>
+#include <cmath>
+#include <pthread.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+#include <eigen3/Eigen/Dense>
+
 #include <ros/ros.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Quaternion.h>
@@ -9,15 +18,14 @@
 
 #include <tf/transform_datatypes.h>
 
-#include <cmath>
-
-#include "include/config.h"
 #include "include/lidar_driver.h"
 #include "include/registration_icp_ndt.h"
+#include "include/kalman_fusion.h"
 
-#include <eigen3/Eigen/Dense>
-
+using namespace std;
 using namespace Eigen;
+
+__kalman_filter *kf = new __kalman_filter;
 
 #include <signal.h>
 bool ctrl_c_pressed;
@@ -39,43 +47,74 @@ void imuqua_cb(const sensor_msgs::Imu& msg){
     //Current_euler.z=-Current_euler.z;
     //Current_euler.y=-Current_euler.y;
     Current_acc = msg.linear_acceleration;
+
+    //struct timeval t;
+    //gettimeofday(&t, NULL);
+    //cout << (double)t.tv_usec / 1000. << endl;
 }
+
+static bool is_thread_running = false;
+void *ros_thread(void *arg);
+void *lidar_slam_thread(void *arg);
 
 void laser_imu_fusion(vector<__scandot> data, double roll, double pitch, double yaw);
 bool rotate_Grid2Grid(double &x, double &y, double &z, double roll, double pitch, double yaw);
 
 int main(int argc, char *argv[]) {
-    __lidar *lidar = new __lidar;
-    __registration_abs *reg = new __registration_icp_ndt;
+    int err;
+    pthread_t ros_thread_id, lidar_thread_id;
+    err = pthread_create(&ros_thread_id, NULL, ros_thread, NULL);
+    if (err != 0) {
+        fprintf(stderr,"ros thread created fail.\n");
+        exit(-1);
+    }
 
-    static int i = 0;
-    static double dx = 0., dy = 0.;
+    err = pthread_create(&lidar_thread_id, NULL, lidar_slam_thread, NULL);
+    if (err != 0) {
+        fprintf(stderr,"ros thread created fail.\n");
+        exit(-1);
+    }
 
     ros::init(argc, argv, "offboard_rplidar_node");
-	ros::NodeHandle nh;
-	
-    ros::Subscriber state_sub = nh.subscribe<mavros_msgs::State>
-            ("mavros/state", 10, state_cb);
-    ros::Publisher local_pos_pub = nh.advertise<geometry_msgs::PoseStamped>
-            ("mavros/setpoint_position/local", 10);
-    ros::ServiceClient arming_client = nh.serviceClient<mavros_msgs::CommandBool>
-            ("mavros/cmd/arming");
-    ros::ServiceClient set_mode_client = nh.serviceClient<mavros_msgs::SetMode>
-            ("mavros/set_mode");
-    ros::Subscriber imuqua_sub = nh.subscribe
-            ("mavros/imu/data", 10, imuqua_cb);
-		
+
+    sleep(3);
+    while (is_thread_running) {
+        //printf("main thread:\n");
+        usleep(500e3);
+    }
+
+    sleep(1);
+
+    pthread_join(ros_thread_id, NULL);
+    return 0;
+}
+
+void *ros_thread(void *arg) {
+
+    ros::NodeHandle nh;
+
     //the setpoint publishing rate MUST be faster than 2Hz
-	ros::Rate rate(100.0);
+    ros::Rate rate(100.0);          // Hz
 
-	signal(SIGINT, ctrlc);
+    ros::Subscriber state_sub = nh.subscribe<mavros_msgs::State>
+                ("mavros/state", 10, state_cb);
+    ros::Publisher local_pos_pub = nh.advertise<geometry_msgs::PoseStamped>
+                ("mavros/setpoint_position/local", 10);
+    ros::ServiceClient arming_client = nh.serviceClient<mavros_msgs::CommandBool>
+                ("mavros/cmd/arming");
+    ros::ServiceClient set_mode_client = nh.serviceClient<mavros_msgs::SetMode>
+                ("mavros/set_mode");
+    ros::Subscriber imuqua_sub = nh.subscribe
+                ("mavros/imu/data", 10, imuqua_cb);
 
-	// wait for FCU connection
+    signal(SIGINT, ctrlc);
+
+    // wait for FCU connection
     while(ros::ok() && !current_state.connected){
         ros::spinOnce();
         rate.sleep();
-	}
-	
+    }
+
     geometry_msgs::PoseStamped pose;
     pose.pose.position.x = 0;
     pose.pose.position.y = 0;
@@ -86,42 +125,62 @@ int main(int argc, char *argv[]) {
         local_pos_pub.publish(pose);
         ros::spinOnce();
         rate.sleep();
-	}
-	
+    }
+
     mavros_msgs::SetMode offb_set_mode;
     offb_set_mode.request.custom_mode = "OFFBOARD";
 
     mavros_msgs::CommandBool arm_cmd;
     arm_cmd.request.value = true;
 
-	ros::Time last_request = ros::Time::now();
-	
-    while (true) {
-		
+    ros::Time last_request = ros::Time::now();
+
+    is_thread_running = true;
+    while (ros::ok()) {
         // roll pitch yaw ax ay az
         //ROS_INFO("%f\t%f\t%f\t%f\t%f\t%f", Current_euler.x * 180 / M_PI, Current_euler.y * 180 / M_PI, Current_euler.z * 180 / M_PI,
         //                                   Current_acc.x, Current_acc.y, Current_acc.z);
 
-//       if( current_state.mode != "OFFBOARD" &&
-//            (ros::Time::now() - last_request > ros::Duration(5.0))){
-//            if( set_mode_client.call(offb_set_mode) &&
-//                offb_set_mode.response.mode_sent){
-//                ROS_INFO("Offboard enabled");
-//            }
-//            last_request = ros::Time::now();
-//        } else {
-//            if( !current_state.armed &&
-//                (ros::Time::now() - last_request > ros::Duration(5.0))){
-//                if( arming_client.call(arm_cmd) &&
-//                    arm_cmd.response.success){
-//                    ROS_INFO("Vehicle armed");
-//                }
-//                last_request = ros::Time::now();
-//            }
-//        }
+        //       if( current_state.mode != "OFFBOARD" &&
+        //            (ros::Time::now() - last_request > ros::Duration(5.0))){
+        //            if( set_mode_client.call(offb_set_mode) &&
+        //                offb_set_mode.response.mode_sent){
+        //                ROS_INFO("Offboard enabled");
+        //            }
+        //            last_request = ros::Time::now();
+        //        } else {
+        //            if( !current_state.armed &&
+        //                (ros::Time::now() - last_request > ros::Duration(5.0))){
+        //                if( arming_client.call(arm_cmd) &&
+        //                    arm_cmd.response.success){
+        //                    ROS_INFO("Vehicle armed");
+        //                }
+        //                last_request = ros::Time::now();
+        //            }
+        //        }
 
-//        local_pos_pub.publish(pose);		
+        //        local_pos_pub.publish(pose);
 
+        if (ctrl_c_pressed){
+            break;
+        }
+        ros::spinOnce();
+        rate.sleep();
+    }
+
+    is_thread_running = false;
+    return ((void*)0);
+}
+
+void *lidar_slam_thread(void *arg) {
+    __lidar *lidar = new __lidar;
+    __registration_abs *reg = new __registration_icp_ndt;
+
+    static double x = 0., y = 0.;
+
+    lidar->init();                  // 构造那边的init会失效
+
+    while (is_thread_running) {
         if (lidar->update_Data()) {
             if(lidar->get_Data().size() && lidar->get_LastData().size()) {
                 vector<__scandot> data, data_last;
@@ -137,26 +196,17 @@ int main(int argc, char *argv[]) {
 
                 reg->update();
 
-                dx += reg->get_dx();
-                dy += reg->get_dy();
+                x += reg->get_dx();
+                y += reg->get_dy();
 
-                struct timeval t;
-                gettimeofday(&t, NULL);
-                cout << (double)t.tv_usec / 1000. << "dx: " << dx << " dy: " << dy << endl;      // cm
+                cout << "x: " << x << " y: " << y << endl;      // cm
             }
         }
-
-        i++;
-        if (ctrl_c_pressed){
-            break;
-        }
-     	ros::spinOnce();
-		rate.sleep();
     }
 
     delete lidar;
     delete reg;
-    return 0;
+    return ((void*)0);
 }
 
 void laser_imu_fusion(vector<__scandot> data, double roll, double pitch, double yaw) {

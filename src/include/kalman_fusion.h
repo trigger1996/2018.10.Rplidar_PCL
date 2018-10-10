@@ -3,6 +3,7 @@
 
 #include "config.h"
 #include "eigen3/Eigen/Dense"
+#include "../iir1/Iir.h"
 
 using namespace std;
 using namespace Eigen;
@@ -37,6 +38,10 @@ protected:
     double vel_x_imu, vel_y_imu;
     double vel_x, vel_y;
     double x, y;
+
+    const static char acc_iir_order = 10;
+
+    Iir::Butterworth::LowPass<acc_iir_order> acc_x_lpf, acc_y_lpf;
 
     void integrate_in_F();  // 频域积分
 

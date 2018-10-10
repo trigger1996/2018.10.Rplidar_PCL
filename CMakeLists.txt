@@ -228,9 +228,16 @@ set(lidar_src
     ${lidar_dir}/src/hal/thread.cpp
 )
 
+##
+# Submodules
+include(
+cmake_submodules/CMake_iir.txt      # iir
+)
+
 include_directories(
    ${PCL_INCLUDE_DIRS}
    ${lidar_include_dir}
+   ${IIR_DIR}
 )
 
 add_executable(main_rplidar_pcl
@@ -246,6 +253,8 @@ target_link_libraries(main_rplidar_pcl
     ${catkin_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     ${PCL_LIBRARIES}
+
+    iir
 )
 
 add_dependencies(main_rplidar_pcl
