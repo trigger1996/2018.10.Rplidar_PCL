@@ -1,1 +1,9 @@
 .
+src/sdk/src/arch/linux
+src/sdk/include
+src/sdk/src/arch/macOS
+src/sdk/src
+src/include
+src/sdk/src/arch/win32
+src
+src/sdk/src/hal

@@ -1,12 +1,3 @@
-/**
- * @file offb_node.cpp
- * @brief Offboard control example node, written with MAVROS version 0.19.x, PX4 Pro Flight
- * Stack and tested in Gazebo SITL
- */
-
-// https://404warehouse.net/2015/12/20/autopilot-offboard-control-using-mavros-package-on-ros/
-// https://blog.csdn.net/enthusiasmzing/article/details/79165152
-
 #include <ros/ros.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Quaternion.h>
@@ -20,11 +11,19 @@
 
 #include <cmath>
 
+#include "include/config.h"
+#include "include/lidar_driver.h"
+#include "include/registration_icp_ndt.h"
+
 #include <eigen3/Eigen/Dense>
 
 using namespace Eigen;
 
-bool rotate_Grid2Grid(double &x, double &y, double &z, double roll, double pitch, double yaw);
+#include <signal.h>
+bool ctrl_c_pressed;
+void ctrlc(int) {
+    ctrl_c_pressed = true;
+}
 
 mavros_msgs::State current_state;
 void state_cb(const mavros_msgs::State::ConstPtr& msg){
@@ -40,14 +39,18 @@ void imuqua_cb(const sensor_msgs::Imu& msg){
     //Current_euler.z=-Current_euler.z;
     //Current_euler.y=-Current_euler.y;
     Current_acc = msg.linear_acceleration;
-
 }
 
-int main(int argc, char **argv)
-{
-    ros::init(argc, argv, "offb_node");
-    ros::NodeHandle nh;
+int main(int argc, char *argv[]) {
+    __lidar *lidar = new __lidar;
+    __registration_abs *reg = new __registration_icp_ndt;
 
+    static int i = 0;
+    static double dx = 0., dy = 0.;
+
+    ros::init(argc, argv, "offboard_rplidar_node");
+	ros::NodeHandle nh;
+	
     ros::Subscriber state_sub = nh.subscribe<mavros_msgs::State>
             ("mavros/state", 10, state_cb);
     ros::Publisher local_pos_pub = nh.advertise<geometry_msgs::PoseStamped>
@@ -56,21 +59,20 @@ int main(int argc, char **argv)
             ("mavros/cmd/arming");
     ros::ServiceClient set_mode_client = nh.serviceClient<mavros_msgs::SetMode>
             ("mavros/set_mode");
-
-    // 自增加
     ros::Subscriber imuqua_sub = nh.subscribe
             ("mavros/imu/data", 10, imuqua_cb);
-
-
+		
     //the setpoint publishing rate MUST be faster than 2Hz
-    ros::Rate rate(100.0);
+	ros::Rate rate(100.0);
 
-    // wait for FCU connection
+	signal(SIGINT, ctrlc);
+
+	// wait for FCU connection
     while(ros::ok() && !current_state.connected){
         ros::spinOnce();
         rate.sleep();
-    }
-
+	}
+	
     geometry_msgs::PoseStamped pose;
     pose.pose.position.x = 0;
     pose.pose.position.y = 0;
@@ -81,21 +83,21 @@ int main(int argc, char **argv)
         local_pos_pub.publish(pose);
         ros::spinOnce();
         rate.sleep();
-    }
-
+	}
+	
     mavros_msgs::SetMode offb_set_mode;
     offb_set_mode.request.custom_mode = "OFFBOARD";
 
     mavros_msgs::CommandBool arm_cmd;
     arm_cmd.request.value = true;
 
-    ros::Time last_request = ros::Time::now();
-
-    while(ros::ok()){
-
+	ros::Time last_request = ros::Time::now();
+	
+    while (true) {
+		
         // roll pitch yaw ax ay az
-        ROS_INFO("%f\t%f\t%f\t%f\t%f\t%f", Current_euler.x * 180 / M_PI, Current_euler.y * 180 / M_PI, Current_euler.z * 180 / M_PI,
-                                           Current_acc.x, Current_acc.y, Current_acc.z);
+        //ROS_INFO("%f\t%f\t%f\t%f\t%f\t%f", Current_euler.x * 180 / M_PI, Current_euler.y * 180 / M_PI, Current_euler.z * 180 / M_PI,
+        //                                   Current_acc.x, Current_acc.y, Current_acc.z);
 
 //       if( current_state.mode != "OFFBOARD" &&
 //            (ros::Time::now() - last_request > ros::Duration(5.0))){
@@ -115,47 +117,31 @@ int main(int argc, char **argv)
 //            }
 //        }
 
-//        local_pos_pub.publish(pose);
+//        local_pos_pub.publish(pose);		
 
-        ros::spinOnce();
-        rate.sleep();
+        if (lidar->update_Data()) {
+            if(lidar->get_Data().size() && lidar->get_LastData().size()) {
+                reg->set_Src_PointCloud(lidar->get_LastData());
+                reg->set_Ref_PointCloud(lidar->get_Data());
+
+                reg->update();
+
+                dx += reg->get_dx();
+                dy += reg->get_dy();
+
+                cout << "dx: " << dx << " dy: " << dy << endl;      // cm
+            }
+        }
+
+        i++;
+        if (ctrl_c_pressed){
+            break;
+        }
+     	ros::spinOnce();
+		rate.sleep();
     }
 
+    delete lidar;
+    delete reg;
     return 0;
-}
-
-bool rotate_Grid2Grid(double &x, double &y, double &z, double roll, double pitch, double yaw) {
-
-    double a, b, g;             // alpha, beta, gamma
-    MatrixXd C1, C2, C3;
-    MatrixXd X;
-    bool is_singular = false;
-
-    a = roll; b = pitch; g = yaw;
-
-    C1.resize(3, 3);
-    C1 << 1,            0,          0,
-          0,            cos(a),     sin(a),
-          0,           -sin(a),     cos(a);
-    C2.resize(3, 3);
-    C2 << cos(b),       0,         -sin(b),
-          0,            1,          0,
-          sin(b),       0,          cos(b);
-
-    C3.resize(3, 3);
-    C3 << cos(g),       sin(g),     0,
-         -sin(g),       cos(g),     0,
-          0,            0,          1;
-
-    X.resize(3, 1);
-    X   << x,
-           y,
-           z;
-
-    X = C3 * C2 * C1 * X;
-    x = X(0, 0);
-    y = X(1, 0);
-    z = X(2, 0);
-
-    return is_singular;
-}
+}	

@@ -199,13 +199,53 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
+
+## boost
+find_package(Boost 1.68.0 REQUIRED)			# 这里故意调高版本，其实用不着那么高的，但是机子装了两套boost，怕冲突
+
+# pcl
+find_package(PCL REQUIRED)
+
+set(PCL_INCLUDE_DIRS /usr/local/include/pcl-1.8)
+
+add_definitions(${PCL_DEFINITIONS})
+
+# lidar sdk
+set(lidar_dir
+    src/sdk
+)
+
+set(lidar_include_dir
+    ${lidar_dir}/include
+    ${lidar_dir}/src
+)
+
+set(lidar_src
+    ${lidar_dir}/src/rplidar_driver.cpp
+    ${lidar_dir}/src/arch/linux/net_serial.cpp
+    ${lidar_dir}/src/arch/linux/net_socket.cpp
+    ${lidar_dir}/src/arch/linux/timer.cpp
+    ${lidar_dir}/src/hal/thread.cpp
+)
+
+include_directories(
+   ${PCL_INCLUDE_DIRS}
+   ${lidar_include_dir}
+)
+
 add_executable(main_rplidar_pcl
+    ${lidar_src}
+
+    src/lidar_driver.cpp
+    src/registration_icp_ndt.cpp
+    src/kalman_fusion.cpp
     src/main.cpp
 )
 
 target_link_libraries(main_rplidar_pcl
     ${catkin_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
+    ${PCL_LIBRARIES}
 )
 
 add_dependencies(main_rplidar_pcl
