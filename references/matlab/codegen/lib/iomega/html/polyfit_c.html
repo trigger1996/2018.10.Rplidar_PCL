@@ -14,7 +14,7 @@
 <a name="2"><font color="#888888 "><i>    2   </i></font></a><font color="#117755"><I> * File: polyfit.c</i></font>
 <a name="3"><font color="#888888 "><i>    3   </i></font></a><font color="#117755"><I> *</i></font>
 <a name="4"><font color="#888888 "><i>    4   </i></font></a><font color="#117755"><I> * MATLAB Coder version            : 3.4</i></font>
-<a name="5"><font color="#888888 "><i>    5   </i></font></a><font color="#117755"><I> * C/C++ source code generated on  : 12-Oct-2018 14:10:50</i></font>
+<a name="5"><font color="#888888 "><i>    5   </i></font></a><font color="#117755"><I> * C/C++ source code generated on  : 12-Oct-2018 15:40:47</i></font>
 <a name="6"><font color="#888888 "><i>    6   </i></font></a><font color="#117755"><I> */</i></font>
 <a name="7"><font color="#888888 "><i>    7   </i></font></a>
 <a name="8"><font color="#888888 "><i>    8   </i></font></a><font color="#117755"><i>/* Include Files */</i></font>
@@ -35,10 +35,10 @@
 <a name="23"><font color="#888888 "><i>   23   </i></font></a><font color="#117755"><I> */</i></font>
 <a name="24"><font color="#888888 "><i>   24   </i></font></a><font color="#112266"><b>void</b></font> <a name="fcn_polyfit">polyfit</a>(<font color="#112266"><b>const</b></font> <font color="#112266"><b>double</b></font> x[512], <font color="#112266"><b>const</b></font> <font color="#112266"><b>double</b></font> y[512], <font color="#112266"><b>double</b></font> p[3])
 <a name="25"><font color="#888888 "><i>   25   </i></font></a><b>{</b>
-<a name="26"><font color="#888888 "><i>   26   </i></font></a>  <font color="#112266"><b>double</b></font> dv7[1536];
+<a name="26"><font color="#888888 "><i>   26   </i></font></a>  <font color="#112266"><b>double</b></font> dv8[1536];
 <a name="27"><font color="#888888 "><i>   27   </i></font></a>  <font color="#112266"><b>int</b></font> rr;
-<a name="28"><font color="#888888 "><i>   28   </i></font></a>  <a href="vander_c.html#fcn_vander" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_vander');" target="_self"><font color="#1122aa">vander</font></a>(x, dv7);
-<a name="29"><font color="#888888 "><i>   29   </i></font></a>  <a href="qrsolve_c.html#fcn_qrsolve" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_qrsolve');" target="_self"><font color="#1122aa">qrsolve</font></a>(dv7, y, p, &amp;rr);
+<a name="28"><font color="#888888 "><i>   28   </i></font></a>  <a href="vander_c.html#fcn_vander" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_vander');" target="_self"><font color="#1122aa">vander</font></a>(x, dv8);
+<a name="29"><font color="#888888 "><i>   29   </i></font></a>  <a href="qrsolve_c.html#fcn_qrsolve" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_qrsolve');" target="_self"><font color="#1122aa">qrsolve</font></a>(dv8, y, p, &amp;rr);
 <a name="30"><font color="#888888 "><i>   30   </i></font></a><b>}</b>
 <a name="31"><font color="#888888 "><i>   31   </i></font></a>
 <a name="32"><font color="#888888 "><i>   32   </i></font></a><font color="#117755"><i>/*</i></font>

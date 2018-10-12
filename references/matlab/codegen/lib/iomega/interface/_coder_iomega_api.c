@@ -2,7 +2,7 @@
  * File: _coder_iomega_api.c
  *
  * MATLAB Coder version            : 3.4
- * C/C++ source code generated on  : 12-Oct-2018 14:10:50
+ * C/C++ source code generated on  : 12-Oct-2018 15:40:47
  */
 
 /* Include Files */
@@ -32,7 +32,7 @@ static real_T c_emlrt_marshallIn(const emlrtStack *sp, const mxArray *dt, const
 static const mxArray *c_emlrt_marshallOut(const real_T u[512]);
 static real_T d_emlrt_marshallIn(const emlrtStack *sp, const mxArray *u, const
   emlrtMsgIdentifier *parentId);
-static void e_emlrt_marshallIn(const emlrtStack *sp, const mxArray *acc_arr,
+static void e_emlrt_marshallIn(const emlrtStack *sp, const mxArray *acc_x_arr,
   const char_T *identifier, real_T y[512]);
 static real_T (*emlrt_marshallIn(const emlrtStack *sp, const mxArray *datain,
   const char_T *identifier))[512];
@@ -141,20 +141,20 @@ static real_T d_emlrt_marshallIn(const emlrtStack *sp, const mxArray *u, const
 
 /*
  * Arguments    : const emlrtStack *sp
- *                const mxArray *acc_arr
+ *                const mxArray *acc_x_arr
  *                const char_T *identifier
  *                real_T y[512]
  * Return Type  : void
  */
-static void e_emlrt_marshallIn(const emlrtStack *sp, const mxArray *acc_arr,
+static void e_emlrt_marshallIn(const emlrtStack *sp, const mxArray *acc_x_arr,
   const char_T *identifier, real_T y[512])
 {
   emlrtMsgIdentifier thisId;
   thisId.fIdentifier = (const char *)identifier;
   thisId.fParent = NULL;
   thisId.bParentIsCell = false;
-  f_emlrt_marshallIn(sp, emlrtAlias(acc_arr), &thisId, y);
-  emlrtDestroyArray(&acc_arr);
+  f_emlrt_marshallIn(sp, emlrtAlias(acc_x_arr), &thisId, y);
+  emlrtDestroyArray(&acc_x_arr);
 }
 
 /*
@@ -272,8 +272,10 @@ void iomega_api(const mxArray * const prhs[4], const mxArray *plhs[1])
   real_T dataout_type;
   const mxArray *tmp;
   real_T arr_len;
-  real_T acc_arr[512];
-  real_T vel_arr[512];
+  real_T acc_x_arr[512];
+  real_T acc_y_arr[512];
+  real_T vel_x_arr[512];
+  real_T vel_y_arr[512];
   real_T t[512];
   emlrtStack st = { NULL,              /* site */
     NULL,                              /* tls */
@@ -295,14 +297,24 @@ void iomega_api(const mxArray * const prhs[4], const mxArray *plhs[1])
     arr_len = c_emlrt_marshallIn(&st, tmp, "arr_len");
   }
 
-  tmp = emlrtGetGlobalVariable("acc_arr");
+  tmp = emlrtGetGlobalVariable("acc_x_arr");
   if (tmp != NULL) {
-    e_emlrt_marshallIn(&st, tmp, "acc_arr", acc_arr);
+    e_emlrt_marshallIn(&st, tmp, "acc_x_arr", acc_x_arr);
   }
 
-  tmp = emlrtGetGlobalVariable("vel_arr");
+  tmp = emlrtGetGlobalVariable("acc_y_arr");
   if (tmp != NULL) {
-    e_emlrt_marshallIn(&st, tmp, "vel_arr", vel_arr);
+    e_emlrt_marshallIn(&st, tmp, "acc_y_arr", acc_y_arr);
+  }
+
+  tmp = emlrtGetGlobalVariable("vel_x_arr");
+  if (tmp != NULL) {
+    e_emlrt_marshallIn(&st, tmp, "vel_x_arr", vel_x_arr);
+  }
+
+  tmp = emlrtGetGlobalVariable("vel_y_arr");
+  if (tmp != NULL) {
+    e_emlrt_marshallIn(&st, tmp, "vel_y_arr", vel_y_arr);
   }
 
   tmp = emlrtGetGlobalVariable("t");
@@ -315,8 +327,10 @@ void iomega_api(const mxArray * const prhs[4], const mxArray *plhs[1])
 
   /* Marshall out global variables */
   emlrtPutGlobalVariable("arr_len", emlrt_marshallOut(arr_len));
-  emlrtPutGlobalVariable("acc_arr", b_emlrt_marshallOut(acc_arr));
-  emlrtPutGlobalVariable("vel_arr", b_emlrt_marshallOut(vel_arr));
+  emlrtPutGlobalVariable("acc_x_arr", b_emlrt_marshallOut(acc_x_arr));
+  emlrtPutGlobalVariable("acc_y_arr", b_emlrt_marshallOut(acc_y_arr));
+  emlrtPutGlobalVariable("vel_x_arr", b_emlrt_marshallOut(vel_x_arr));
+  emlrtPutGlobalVariable("vel_y_arr", b_emlrt_marshallOut(vel_y_arr));
   emlrtPutGlobalVariable("t", b_emlrt_marshallOut(t));
 
   /* Marshall function outputs */
@@ -377,23 +391,28 @@ void iomega_terminate(void)
 }
 
 /*
- * Arguments    : const mxArray * const prhs[3]
- *                const mxArray *plhs[2]
+ * Arguments    : const mxArray * const prhs[4]
+ *                const mxArray *plhs[4]
  * Return Type  : void
  */
-void sliding_integrate_f_api(const mxArray * const prhs[3], const mxArray *plhs
-  [2])
+void sliding_integrate_f_api(const mxArray * const prhs[4], const mxArray *plhs
+  [4])
 {
-  real_T data_in;
+  real_T ax_in;
+  real_T ay_in;
   real_T ts;
   real_T arr_len_in;
   const mxArray *tmp;
   real_T arr_len;
-  real_T acc_arr[512];
-  real_T vel_arr[512];
+  real_T acc_x_arr[512];
+  real_T acc_y_arr[512];
+  real_T vel_x_arr[512];
+  real_T vel_y_arr[512];
   real_T t[512];
-  real_T dst;
-  real_T vel;
+  real_T dst_x;
+  real_T dst_y;
+  real_T vel_x;
+  real_T vel_y;
   emlrtStack st = { NULL,              /* site */
     NULL,                              /* tls */
     NULL                               /* prev */
@@ -402,9 +421,10 @@ void sliding_integrate_f_api(const mxArray * const prhs[3], const mxArray *plhs
   st.tls = emlrtRootTLSGlobal;
 
   /* Marshall function inputs */
-  data_in = c_emlrt_marshallIn(&st, emlrtAliasP(prhs[0]), "data_in");
-  ts = c_emlrt_marshallIn(&st, emlrtAliasP(prhs[1]), "ts");
-  arr_len_in = c_emlrt_marshallIn(&st, emlrtAliasP(prhs[2]), "arr_len_in");
+  ax_in = c_emlrt_marshallIn(&st, emlrtAliasP(prhs[0]), "ax_in");
+  ay_in = c_emlrt_marshallIn(&st, emlrtAliasP(prhs[1]), "ay_in");
+  ts = c_emlrt_marshallIn(&st, emlrtAliasP(prhs[2]), "ts");
+  arr_len_in = c_emlrt_marshallIn(&st, emlrtAliasP(prhs[3]), "arr_len_in");
 
   /* Marshall in global variables */
   tmp = emlrtGetGlobalVariable("arr_len");
@@ -412,14 +432,24 @@ void sliding_integrate_f_api(const mxArray * const prhs[3], const mxArray *plhs
     arr_len = c_emlrt_marshallIn(&st, tmp, "arr_len");
   }
 
-  tmp = emlrtGetGlobalVariable("acc_arr");
+  tmp = emlrtGetGlobalVariable("acc_x_arr");
   if (tmp != NULL) {
-    e_emlrt_marshallIn(&st, tmp, "acc_arr", acc_arr);
+    e_emlrt_marshallIn(&st, tmp, "acc_x_arr", acc_x_arr);
   }
 
-  tmp = emlrtGetGlobalVariable("vel_arr");
+  tmp = emlrtGetGlobalVariable("acc_y_arr");
   if (tmp != NULL) {
-    e_emlrt_marshallIn(&st, tmp, "vel_arr", vel_arr);
+    e_emlrt_marshallIn(&st, tmp, "acc_y_arr", acc_y_arr);
+  }
+
+  tmp = emlrtGetGlobalVariable("vel_x_arr");
+  if (tmp != NULL) {
+    e_emlrt_marshallIn(&st, tmp, "vel_x_arr", vel_x_arr);
+  }
+
+  tmp = emlrtGetGlobalVariable("vel_y_arr");
+  if (tmp != NULL) {
+    e_emlrt_marshallIn(&st, tmp, "vel_y_arr", vel_y_arr);
   }
 
   tmp = emlrtGetGlobalVariable("t");
@@ -428,17 +458,22 @@ void sliding_integrate_f_api(const mxArray * const prhs[3], const mxArray *plhs
   }
 
   /* Invoke the target function */
-  sliding_integrate_f(data_in, ts, arr_len_in, &dst, &vel);
+  sliding_integrate_f(ax_in, ay_in, ts, arr_len_in, &dst_x, &dst_y, &vel_x,
+                      &vel_y);
 
   /* Marshall out global variables */
   emlrtPutGlobalVariable("arr_len", emlrt_marshallOut(arr_len));
-  emlrtPutGlobalVariable("acc_arr", b_emlrt_marshallOut(acc_arr));
-  emlrtPutGlobalVariable("vel_arr", b_emlrt_marshallOut(vel_arr));
+  emlrtPutGlobalVariable("acc_x_arr", b_emlrt_marshallOut(acc_x_arr));
+  emlrtPutGlobalVariable("acc_y_arr", b_emlrt_marshallOut(acc_y_arr));
+  emlrtPutGlobalVariable("vel_x_arr", b_emlrt_marshallOut(vel_x_arr));
+  emlrtPutGlobalVariable("vel_y_arr", b_emlrt_marshallOut(vel_y_arr));
   emlrtPutGlobalVariable("t", b_emlrt_marshallOut(t));
 
   /* Marshall function outputs */
-  plhs[0] = emlrt_marshallOut(dst);
-  plhs[1] = emlrt_marshallOut(vel);
+  plhs[0] = emlrt_marshallOut(dst_x);
+  plhs[1] = emlrt_marshallOut(dst_y);
+  plhs[2] = emlrt_marshallOut(vel_x);
+  plhs[3] = emlrt_marshallOut(vel_y);
 }
 
 /*

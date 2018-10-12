@@ -2,7 +2,7 @@
  * File: xnrm2.h
  *
  * MATLAB Coder version            : 3.4
- * C/C++ source code generated on  : 12-Oct-2018 13:32:32
+ * C/C++ source code generated on  : 12-Oct-2018 15:40:47
  */
 
 #ifndef XNRM2_H
@@ -16,7 +16,7 @@
 #include "rt_defines.h"
 #include "rt_nonfinite.h"
 #include "rtwtypes.h"
-#include "sliding_integration_f_types.h"
+#include "iomega_types.h"
 
 /* Function Declarations */
 extern double b_xnrm2(int n, const double x[1024], int ix0);

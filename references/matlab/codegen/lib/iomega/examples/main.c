@@ -2,7 +2,7 @@
  * File: main.c
  *
  * MATLAB Coder version            : 3.4
- * C/C++ source code generated on  : 12-Oct-2018 14:10:50
+ * C/C++ source code generated on  : 12-Oct-2018 15:40:47
  */
 
 /*************************************************************************/
@@ -76,14 +76,14 @@ static double argInit_real_T(void)
  */
 static void main_iomega(void)
 {
-  double dv8[512];
+  double dv9[512];
   double dataout[512];
 
   /* Initialize function 'iomega' input arguments. */
   /* Initialize function input argument 'datain'. */
   /* Call the entry-point 'iomega'. */
-  argInit_512x1_real_T(dv8);
-  iomega(dv8, argInit_real_T(), argInit_real_T(), argInit_real_T(), dataout);
+  argInit_512x1_real_T(dv9);
+  iomega(dv9, argInit_real_T(), argInit_real_T(), argInit_real_T(), dataout);
 }
 
 /*
@@ -92,13 +92,15 @@ static void main_iomega(void)
  */
 static void main_sliding_integrate_f(void)
 {
-  double dst;
-  double vel;
+  double dst_x;
+  double dst_y;
+  double vel_x;
+  double vel_y;
 
   /* Initialize function 'sliding_integrate_f' input arguments. */
   /* Call the entry-point 'sliding_integrate_f'. */
-  sliding_integrate_f(argInit_real_T(), argInit_real_T(), argInit_real_T(), &dst,
-                      &vel);
+  sliding_integrate_f(argInit_real_T(), argInit_real_T(), argInit_real_T(),
+                      argInit_real_T(), &dst_x, &dst_y, &vel_x, &vel_y);
 }
 
 /*

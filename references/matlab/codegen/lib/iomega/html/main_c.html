@@ -14,7 +14,7 @@
 <a name="2"><font color="#888888 "><i>    2   </i></font></a><font color="#117755"><I> * File: main.c</i></font>
 <a name="3"><font color="#888888 "><i>    3   </i></font></a><font color="#117755"><I> *</i></font>
 <a name="4"><font color="#888888 "><i>    4   </i></font></a><font color="#117755"><I> * MATLAB Coder version            : 3.4</i></font>
-<a name="5"><font color="#888888 "><i>    5   </i></font></a><font color="#117755"><I> * C/C++ source code generated on  : 12-Oct-2018 14:10:50</i></font>
+<a name="5"><font color="#888888 "><i>    5   </i></font></a><font color="#117755"><I> * C/C++ source code generated on  : 12-Oct-2018 15:40:47</i></font>
 <a name="6"><font color="#888888 "><i>    6   </i></font></a><font color="#117755"><I> */</i></font>
 <a name="7"><font color="#888888 "><i>    7   </i></font></a>
 <a name="8"><font color="#888888 "><i>    8   </i></font></a><font color="#117755"><i>/*************************************************************************/</i></font>
@@ -88,14 +88,14 @@
 <a name="76"><font color="#888888 "><i>   76   </i></font></a><font color="#117755"><I> */</i></font>
 <a name="77"><font color="#888888 "><i>   77   </i></font></a><font color="#112266"><b>static</b></font> <font color="#112266"><b>void</b></font> <a name="fcn_main_iomega">main_iomega</a>(<font color="#112266"><b>void</b></font>)
 <a name="78"><font color="#888888 "><i>   78   </i></font></a><b>{</b>
-<a name="79"><font color="#888888 "><i>   79   </i></font></a>  <font color="#112266"><b>double</b></font> dv8[512];
+<a name="79"><font color="#888888 "><i>   79   </i></font></a>  <font color="#112266"><b>double</b></font> dv9[512];
 <a name="80"><font color="#888888 "><i>   80   </i></font></a>  <font color="#112266"><b>double</b></font> dataout[512];
 <a name="81"><font color="#888888 "><i>   81   </i></font></a>
 <a name="82"><font color="#888888 "><i>   82   </i></font></a>  <font color="#117755"><i>/* Initialize function 'iomega' input arguments. */</i></font>
 <a name="83"><font color="#888888 "><i>   83   </i></font></a>  <font color="#117755"><i>/* Initialize function input argument 'datain'. */</i></font>
 <a name="84"><font color="#888888 "><i>   84   </i></font></a>  <font color="#117755"><i>/* Call the entry-point 'iomega'. */</i></font>
-<a name="85"><font color="#888888 "><i>   85   </i></font></a>  <a href="#fcn_argInit_512x1_real_T" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_argInit_512x1_real_T');" target="_self"><font color="#1122aa">argInit_512x1_real_T</font></a>(dv8);
-<a name="86"><font color="#888888 "><i>   86   </i></font></a>  iomega(dv8, <a href="#fcn_argInit_real_T" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_argInit_real_T');" target="_self"><font color="#1122aa">argInit_real_T</font></a>(), <a href="#fcn_argInit_real_T" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_argInit_real_T');" target="_self"><font color="#1122aa">argInit_real_T</font></a>(), <a href="#fcn_argInit_real_T" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_argInit_real_T');" target="_self"><font color="#1122aa">argInit_real_T</font></a>(), dataout);
+<a name="85"><font color="#888888 "><i>   85   </i></font></a>  <a href="#fcn_argInit_512x1_real_T" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_argInit_512x1_real_T');" target="_self"><font color="#1122aa">argInit_512x1_real_T</font></a>(dv9);
+<a name="86"><font color="#888888 "><i>   86   </i></font></a>  iomega(dv9, <a href="#fcn_argInit_real_T" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_argInit_real_T');" target="_self"><font color="#1122aa">argInit_real_T</font></a>(), <a href="#fcn_argInit_real_T" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_argInit_real_T');" target="_self"><font color="#1122aa">argInit_real_T</font></a>(), <a href="#fcn_argInit_real_T" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_argInit_real_T');" target="_self"><font color="#1122aa">argInit_real_T</font></a>(), dataout);
 <a name="87"><font color="#888888 "><i>   87   </i></font></a><b>}</b>
 <a name="88"><font color="#888888 "><i>   88   </i></font></a>
 <a name="89"><font color="#888888 "><i>   89   </i></font></a><font color="#117755"><i>/*</i></font>
@@ -104,46 +104,48 @@
 <a name="92"><font color="#888888 "><i>   92   </i></font></a><font color="#117755"><I> */</i></font>
 <a name="93"><font color="#888888 "><i>   93   </i></font></a><font color="#112266"><b>static</b></font> <font color="#112266"><b>void</b></font> <a name="fcn_main_sliding_integrate_f">main_sliding_integrate_f</a>(<font color="#112266"><b>void</b></font>)
 <a name="94"><font color="#888888 "><i>   94   </i></font></a><b>{</b>
-<a name="95"><font color="#888888 "><i>   95   </i></font></a>  <font color="#112266"><b>double</b></font> dst;
-<a name="96"><font color="#888888 "><i>   96   </i></font></a>  <font color="#112266"><b>double</b></font> vel;
-<a name="97"><font color="#888888 "><i>   97   </i></font></a>
-<a name="98"><font color="#888888 "><i>   98   </i></font></a>  <font color="#117755"><i>/* Initialize function 'sliding_integrate_f' input arguments. */</i></font>
-<a name="99"><font color="#888888 "><i>   99   </i></font></a>  <font color="#117755"><i>/* Call the entry-point 'sliding_integrate_f'. */</i></font>
-<a name="100"><font color="#888888 "><i>  100   </i></font></a>  sliding_integrate_f(<a href="#fcn_argInit_real_T" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_argInit_real_T');" target="_self"><font color="#1122aa">argInit_real_T</font></a>(), <a href="#fcn_argInit_real_T" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_argInit_real_T');" target="_self"><font color="#1122aa">argInit_real_T</font></a>(), <a href="#fcn_argInit_real_T" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_argInit_real_T');" target="_self"><font color="#1122aa">argInit_real_T</font></a>(), &amp;dst,
-<a name="101"><font color="#888888 "><i>  101   </i></font></a>                      &amp;vel);
-<a name="102"><font color="#888888 "><i>  102   </i></font></a><b>}</b>
-<a name="103"><font color="#888888 "><i>  103   </i></font></a>
-<a name="104"><font color="#888888 "><i>  104   </i></font></a><font color="#117755"><i>/*</i></font>
-<a name="105"><font color="#888888 "><i>  105   </i></font></a><font color="#117755"><I> * Arguments    : int argc</i></font>
-<a name="106"><font color="#888888 "><i>  106   </i></font></a><font color="#117755"><I> *                const char * const argv[]</i></font>
-<a name="107"><font color="#888888 "><i>  107   </i></font></a><font color="#117755"><I> * Return Type  : int</i></font>
-<a name="108"><font color="#888888 "><i>  108   </i></font></a><font color="#117755"><I> */</i></font>
-<a name="109"><font color="#888888 "><i>  109   </i></font></a><font color="#112266"><b>int</b></font> <a name="fcn_main">main</a>(<font color="#112266"><b>int</b></font> argc, <font color="#112266"><b>const</b></font> <font color="#112266"><b>char</b></font> * <font color="#112266"><b>const</b></font> argv[])
-<a name="110"><font color="#888888 "><i>  110   </i></font></a><b>{</b>
-<a name="111"><font color="#888888 "><i>  111   </i></font></a>  (<font color="#112266"><b>void</b></font>)argc;
-<a name="112"><font color="#888888 "><i>  112   </i></font></a>  (<font color="#112266"><b>void</b></font>)argv;
-<a name="113"><font color="#888888 "><i>  113   </i></font></a>
-<a name="114"><font color="#888888 "><i>  114   </i></font></a>  <font color="#117755"><i>/* Initialize the application.</i></font>
-<a name="115"><font color="#888888 "><i>  115   </i></font></a><font color="#117755"><I>     You do not need to do this more than one time. */</i></font>
-<a name="116"><font color="#888888 "><i>  116   </i></font></a>  iomega_initialize();
-<a name="117"><font color="#888888 "><i>  117   </i></font></a>
-<a name="118"><font color="#888888 "><i>  118   </i></font></a>  <font color="#117755"><i>/* Invoke the entry-point functions.</i></font>
-<a name="119"><font color="#888888 "><i>  119   </i></font></a><font color="#117755"><I>     You can call entry-point functions multiple times. */</i></font>
-<a name="120"><font color="#888888 "><i>  120   </i></font></a>  <a href="#fcn_main_iomega" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_main_iomega');" target="_self"><font color="#1122aa">main_iomega</font></a>();
-<a name="121"><font color="#888888 "><i>  121   </i></font></a>  <a href="#fcn_main_sliding_integrate_f" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_main_sliding_integrate_f');" target="_self"><font color="#1122aa">main_sliding_integrate_f</font></a>();
-<a name="122"><font color="#888888 "><i>  122   </i></font></a>
-<a name="123"><font color="#888888 "><i>  123   </i></font></a>  <font color="#117755"><i>/* Terminate the application.</i></font>
-<a name="124"><font color="#888888 "><i>  124   </i></font></a><font color="#117755"><I>     You do not need to do this more than one time. */</i></font>
-<a name="125"><font color="#888888 "><i>  125   </i></font></a>  iomega_terminate();
-<a name="126"><font color="#888888 "><i>  126   </i></font></a>  <font color="#112266"><b>return</b></font> 0;
-<a name="127"><font color="#888888 "><i>  127   </i></font></a><b>}</b>
-<a name="128"><font color="#888888 "><i>  128   </i></font></a>
-<a name="129"><font color="#888888 "><i>  129   </i></font></a><font color="#117755"><i>/*</i></font>
-<a name="130"><font color="#888888 "><i>  130   </i></font></a><font color="#117755"><I> * File trailer for main.c</i></font>
-<a name="131"><font color="#888888 "><i>  131   </i></font></a><font color="#117755"><I> *</i></font>
-<a name="132"><font color="#888888 "><i>  132   </i></font></a><font color="#117755"><I> * [EOF]</i></font>
-<a name="133"><font color="#888888 "><i>  133   </i></font></a><font color="#117755"><I> */</i></font>
-<a name="134"><font color="#888888 "><i>  134   </i></font></a></pre>
+<a name="95"><font color="#888888 "><i>   95   </i></font></a>  <font color="#112266"><b>double</b></font> dst_x;
+<a name="96"><font color="#888888 "><i>   96   </i></font></a>  <font color="#112266"><b>double</b></font> dst_y;
+<a name="97"><font color="#888888 "><i>   97   </i></font></a>  <font color="#112266"><b>double</b></font> vel_x;
+<a name="98"><font color="#888888 "><i>   98   </i></font></a>  <font color="#112266"><b>double</b></font> vel_y;
+<a name="99"><font color="#888888 "><i>   99   </i></font></a>
+<a name="100"><font color="#888888 "><i>  100   </i></font></a>  <font color="#117755"><i>/* Initialize function 'sliding_integrate_f' input arguments. */</i></font>
+<a name="101"><font color="#888888 "><i>  101   </i></font></a>  <font color="#117755"><i>/* Call the entry-point 'sliding_integrate_f'. */</i></font>
+<a name="102"><font color="#888888 "><i>  102   </i></font></a>  sliding_integrate_f(<a href="#fcn_argInit_real_T" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_argInit_real_T');" target="_self"><font color="#1122aa">argInit_real_T</font></a>(), <a href="#fcn_argInit_real_T" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_argInit_real_T');" target="_self"><font color="#1122aa">argInit_real_T</font></a>(), <a href="#fcn_argInit_real_T" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_argInit_real_T');" target="_self"><font color="#1122aa">argInit_real_T</font></a>(),
+<a name="103"><font color="#888888 "><i>  103   </i></font></a>                      <a href="#fcn_argInit_real_T" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_argInit_real_T');" target="_self"><font color="#1122aa">argInit_real_T</font></a>(), &amp;dst_x, &amp;dst_y, &amp;vel_x, &amp;vel_y);
+<a name="104"><font color="#888888 "><i>  104   </i></font></a><b>}</b>
+<a name="105"><font color="#888888 "><i>  105   </i></font></a>
+<a name="106"><font color="#888888 "><i>  106   </i></font></a><font color="#117755"><i>/*</i></font>
+<a name="107"><font color="#888888 "><i>  107   </i></font></a><font color="#117755"><I> * Arguments    : int argc</i></font>
+<a name="108"><font color="#888888 "><i>  108   </i></font></a><font color="#117755"><I> *                const char * const argv[]</i></font>
+<a name="109"><font color="#888888 "><i>  109   </i></font></a><font color="#117755"><I> * Return Type  : int</i></font>
+<a name="110"><font color="#888888 "><i>  110   </i></font></a><font color="#117755"><I> */</i></font>
+<a name="111"><font color="#888888 "><i>  111   </i></font></a><font color="#112266"><b>int</b></font> <a name="fcn_main">main</a>(<font color="#112266"><b>int</b></font> argc, <font color="#112266"><b>const</b></font> <font color="#112266"><b>char</b></font> * <font color="#112266"><b>const</b></font> argv[])
+<a name="112"><font color="#888888 "><i>  112   </i></font></a><b>{</b>
+<a name="113"><font color="#888888 "><i>  113   </i></font></a>  (<font color="#112266"><b>void</b></font>)argc;
+<a name="114"><font color="#888888 "><i>  114   </i></font></a>  (<font color="#112266"><b>void</b></font>)argv;
+<a name="115"><font color="#888888 "><i>  115   </i></font></a>
+<a name="116"><font color="#888888 "><i>  116   </i></font></a>  <font color="#117755"><i>/* Initialize the application.</i></font>
+<a name="117"><font color="#888888 "><i>  117   </i></font></a><font color="#117755"><I>     You do not need to do this more than one time. */</i></font>
+<a name="118"><font color="#888888 "><i>  118   </i></font></a>  iomega_initialize();
+<a name="119"><font color="#888888 "><i>  119   </i></font></a>
+<a name="120"><font color="#888888 "><i>  120   </i></font></a>  <font color="#117755"><i>/* Invoke the entry-point functions.</i></font>
+<a name="121"><font color="#888888 "><i>  121   </i></font></a><font color="#117755"><I>     You can call entry-point functions multiple times. */</i></font>
+<a name="122"><font color="#888888 "><i>  122   </i></font></a>  <a href="#fcn_main_iomega" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_main_iomega');" target="_self"><font color="#1122aa">main_iomega</font></a>();
+<a name="123"><font color="#888888 "><i>  123   </i></font></a>  <a href="#fcn_main_sliding_integrate_f" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_main_sliding_integrate_f');" target="_self"><font color="#1122aa">main_sliding_integrate_f</font></a>();
+<a name="124"><font color="#888888 "><i>  124   </i></font></a>
+<a name="125"><font color="#888888 "><i>  125   </i></font></a>  <font color="#117755"><i>/* Terminate the application.</i></font>
+<a name="126"><font color="#888888 "><i>  126   </i></font></a><font color="#117755"><I>     You do not need to do this more than one time. */</i></font>
+<a name="127"><font color="#888888 "><i>  127   </i></font></a>  iomega_terminate();
+<a name="128"><font color="#888888 "><i>  128   </i></font></a>  <font color="#112266"><b>return</b></font> 0;
+<a name="129"><font color="#888888 "><i>  129   </i></font></a><b>}</b>
+<a name="130"><font color="#888888 "><i>  130   </i></font></a>
+<a name="131"><font color="#888888 "><i>  131   </i></font></a><font color="#117755"><i>/*</i></font>
+<a name="132"><font color="#888888 "><i>  132   </i></font></a><font color="#117755"><I> * File trailer for main.c</i></font>
+<a name="133"><font color="#888888 "><i>  133   </i></font></a><font color="#117755"><I> *</i></font>
+<a name="134"><font color="#888888 "><i>  134   </i></font></a><font color="#117755"><I> * [EOF]</i></font>
+<a name="135"><font color="#888888 "><i>  135   </i></font></a><font color="#117755"><I> */</i></font>
+<a name="136"><font color="#888888 "><i>  136   </i></font></a></pre>
 </td></tr></table>
 </p>
 </body>

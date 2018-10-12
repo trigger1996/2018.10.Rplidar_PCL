@@ -2,12 +2,12 @@
 ## Makefile generated for MATLAB file/project 'iomega'. 
 ## 
 ## Makefile     : iomega_rtw.mk
-## Generated on : Fri Oct 12 14:10:55 2018
+## Generated on : Fri Oct 12 15:40:52 2018
 ## MATLAB Coder version: 3.4 (R2017b)
 ## 
 ## Build Info:
 ## 
-## Final product: $(RELATIVE_PATH_TO_ANCHOR)/iomega.a
+## Final product: $(RELATIVE_PATH_TO_ANCHOR)/iomega.lib
 ## Product type : static-library
 ## 
 ###########################################################################
@@ -28,63 +28,58 @@ MATLAB_ROOT               = /home/ghost/matlab/R2017b
 MATLAB_BIN                = /home/ghost/matlab/R2017b/bin
 MATLAB_ARCH_BIN           = $(MATLAB_BIN)/glnxa64
 MASTER_ANCHOR_DIR         = 
-START_DIR                 = /home/ghost/src/matlab/2018.10.slam_ekf/for_cxx
+START_DIR                 = /home/ghost/catkin_ws/src/mavros_rplidar_pcl/references/matlab
 ARCH                      = glnxa64
 RELATIVE_PATH_TO_ANCHOR   = .
-C_STANDARD_OPTS           = -ansi -pedantic -Wno-long-long -fwrapv
-CPP_STANDARD_OPTS         = -std=c++98 -pedantic -Wno-long-long -fwrapv
+C_STANDARD_OPTS           = 
+CPP_STANDARD_OPTS         = 
 
 ###########################################################################
 ## TOOLCHAIN SPECIFICATIONS
 ###########################################################################
 
-# Toolchain Name:          GNU gcc/g++ v4.4.x | gmake (64-bit Linux)
-# Supported Version(s):    4.4.x
+# Toolchain Name:          Catkin v1.0 | gmake (64-bit Linux)
+# Supported Version(s):    
 # ToolchainInfo Version:   R2017b
 # Specification Revision:  1.0
 # 
-#-------------------------------------------
-# Macros assumed to be defined elsewhere
-#-------------------------------------------
-
-# C_STANDARD_OPTS
-# CPP_STANDARD_OPTS
 
 #-----------
 # MACROS
 #-----------
 
-WARN_FLAGS         = -Wall -W -Wwrite-strings -Winline -Wstrict-prototypes -Wnested-externs -Wpointer-arith -Wcast-align
-WARN_FLAGS_MAX     = $(WARN_FLAGS) -Wcast-qual -Wshadow
-CPP_WARN_FLAGS     = -Wall -W -Wwrite-strings -Winline -Wpointer-arith -Wcast-align
-CPP_WARN_FLAGS_MAX = $(CPP_WARN_FLAGS) -Wcast-qual -Wshadow
+CCOUTPUTFLAG = --output_file=
+LDOUTPUTFLAG = --output_file=
 
 TOOLCHAIN_SRCS = 
 TOOLCHAIN_INCS = 
-TOOLCHAIN_LIBS = 
+TOOLCHAIN_LIBS = -lm -lm
 
 #------------------------
 # BUILD TOOL COMMANDS
 #------------------------
 
-# C Compiler: GNU C Compiler
-CC = gcc
+# Assembler: Catkin1.0 Assembler
+AS = echo as
 
-# Linker: GNU Linker
-LD = gcc
+# C Compiler: Catkin1.0 C Compiler
+CC = echo gcc
 
-# C++ Compiler: GNU C++ Compiler
-CPP = g++
+# Linker: Catkin1.0 Linker
+LD = echo gcc
 
-# C++ Linker: GNU C++ Linker
-CPP_LD = g++
+# C++ Compiler: Catkin1.0 C++ Compiler
+CPP = echo g++
 
-# Archiver: GNU Archiver
-AR = ar
+# C++ Linker: Catkin1.0 C++ Linker
+CPP_LD = echo gcc
+
+# Archiver: Catkin1.0 Archiver
+AR = echo ar
 
 # MEX Tool: MEX Tool
 MEX_PATH = $(MATLAB_ARCH_BIN)
-MEX = "$(MEX_PATH)/mex"
+MEX = $(MEX_PATH)/mex
 
 # Download: Download
 DOWNLOAD =
@@ -93,14 +88,15 @@ DOWNLOAD =
 EXECUTE = $(PRODUCT)
 
 # Builder: GMAKE Utility
-MAKE_PATH = %MATLAB%/bin/glnxa64
-MAKE = "$(MAKE_PATH)/gmake"
+MAKE = echo
 
 
 #-------------------------
 # Directives/Utilities
 #-------------------------
 
+ASDEBUG             = -g
+AS_OUTPUT_FLAG      = -o
 CDEBUG              = -g
 C_OUTPUT_FLAG       = -o
 LDDEBUG             = -g
@@ -121,50 +117,42 @@ RUN                 =
 # "Faster Builds" Build Configuration
 #----------------------------------------
 
-ARFLAGS              = ruvs
-CFLAGS               = -c $(C_STANDARD_OPTS) -fPIC \
+ARFLAGS              = -r
+ASFLAGS              = -c \
+                       $(ASFLAGS_ADDITIONAL) \
+                       $(INCLUDES)
+CFLAGS               = -c \
                        -O0
-CPPFLAGS             = -c $(CPP_STANDARD_OPTS) -fPIC \
-                       -O0
-CPP_LDFLAGS          = -Wl,-rpath,"$(MATLAB_ARCH_BIN)",-L"$(MATLAB_ARCH_BIN)"
-CPP_SHAREDLIB_LDFLAGS  = -shared -Wl,-rpath,"$(MATLAB_ARCH_BIN)",-L"$(MATLAB_ARCH_BIN)" -Wl,--no-undefined
+CPPFLAGS             =
+CPP_LDFLAGS          =
+CPP_SHAREDLIB_LDFLAGS  =
 DOWNLOAD_FLAGS       =
 EXECUTE_FLAGS        =
-LDFLAGS              = -Wl,-rpath,"$(MATLAB_ARCH_BIN)",-L"$(MATLAB_ARCH_BIN)"
-MEX_CPPFLAGS         = -MATLAB_ARCH=$(ARCH) $(INCLUDES) \
-                         \
-                       COPTIMFLAGS="$(C_STANDARD_OPTS)  \
-                       -O0 \
-                        $(DEFINES)" \
-                         \
-                       -silent
-MEX_CPPLDFLAGS       = LDFLAGS=='$$LDFLAGS'
-MEX_CFLAGS           = -MATLAB_ARCH=$(ARCH) $(INCLUDES) \
-                         \
-                       COPTIMFLAGS="$(C_STANDARD_OPTS)  \
-                       -O0 \
-                        $(DEFINES)" \
-                         \
-                       -silent
-MEX_LDFLAGS          = LDFLAGS=='$$LDFLAGS'
-MAKE_FLAGS           = -f $(MAKEFILE)
-SHAREDLIB_LDFLAGS    = -shared -Wl,-rpath,"$(MATLAB_ARCH_BIN)",-L"$(MATLAB_ARCH_BIN)" -Wl,--no-undefined
+LDFLAGS              =
+MEX_CPPFLAGS         =
+MEX_CPPLDFLAGS       =
+MEX_CFLAGS           =
+MEX_LDFLAGS          =
+MAKE_FLAGS           = "### Successfully generated all binary outputs."
+SHAREDLIB_LDFLAGS    =
 
 #--------------------
 # File extensions
 #--------------------
 
+OBJ_EXT             = .s.o
+ASM_EXT             = .s
 H_EXT               = .h
-OBJ_EXT             = .o
+OBJ_EXT             = .c.o
 C_EXT               = .c
-EXE_EXT             =
+EXE_EXT             = .elf
 SHAREDLIB_EXT       = .so
 HPP_EXT             = .hpp
-OBJ_EXT             = .o
+OBJ_EXT             = .cpp.o
 CPP_EXT             = .cpp
 EXE_EXT             =
 SHAREDLIB_EXT       = .so
-STATICLIB_EXT       = .a
+STATICLIB_EXT       = .lib
 MEX_EXT             = .mexa64
 MAKE_EXT            = .mk
 
@@ -173,7 +161,7 @@ MAKE_EXT            = .mk
 ## OUTPUT INFO
 ###########################################################################
 
-PRODUCT = $(RELATIVE_PATH_TO_ANCHOR)/iomega.a
+PRODUCT = $(RELATIVE_PATH_TO_ANCHOR)/iomega.lib
 PRODUCT_TYPE = "static-library"
 BUILD_TYPE = "Static Library"
 
@@ -205,7 +193,7 @@ ALL_SRCS = $(SRCS)
 ## OBJECTS
 ###########################################################################
 
-OBJS = iomega_rtwutil.o iomega_data.o iomega_initialize.o iomega_terminate.o iomega.o sliding_integrate_f.o fft.o ifftshift.o ifft.o detrend.o mldivide.o qrsolve.o xgeqp3.o sqrt.o xnrm2.o ixamax.o xswap.o xzlarfg.o xzlarf.o xgemv.o xgerc.o polyfit.o vander.o polyval.o iomega_emxutil.o rt_nonfinite.o rtGetNaN.o rtGetInf.o
+OBJS = iomega_rtwutil.c.o iomega_data.c.o iomega_initialize.c.o iomega_terminate.c.o iomega.c.o sliding_integrate_f.c.o fft.c.o ifftshift.c.o ifft.c.o detrend.c.o mldivide.c.o qrsolve.c.o xgeqp3.c.o sqrt.c.o xnrm2.c.o ixamax.c.o xswap.c.o xzlarfg.c.o xzlarf.c.o xgemv.c.o xgerc.c.o polyfit.c.o vander.c.o polyval.c.o iomega_emxutil.c.o rt_nonfinite.c.o rtGetNaN.c.o rtGetInf.c.o
 
 ALL_OBJS = $(OBJS)
 
@@ -225,7 +213,7 @@ LIBS =
 ## SYSTEM LIBRARIES
 ###########################################################################
 
-SYSTEM_LIBS =  -lm
+SYSTEM_LIBS = 
 
 ###########################################################################
 ## ADDITIONAL TOOLCHAIN FLAGS
@@ -250,6 +238,11 @@ CPPFLAGS += $(CPPFLAGS_BASIC)
 ###########################################################################
 ## INLINED COMMANDS
 ###########################################################################
+
+
+-include codertarget_assembly_flags.mk
+-include ../codertarget_assembly_flags.mk
+
 
 ###########################################################################
 ## PHONY TARGETS
@@ -296,44 +289,64 @@ $(PRODUCT) : $(OBJS) $(PREBUILT_OBJS)
 # SOURCE-TO-OBJECT
 #---------------------
 
-%.o : %.c
-	$(CC) $(CFLAGS) -o "$@" "$<"
+%.c.o : %.c
+	$(CC) $(CFLAGS) -o $@ $<
 
 
-%.o : %.cpp
-	$(CPP) $(CPPFLAGS) -o "$@" "$<"
+%.s.o : %.s
+	$(AS) $(ASFLAGS) -o $@ $<
 
 
-%.o : $(RELATIVE_PATH_TO_ANCHOR)/%.c
-	$(CC) $(CFLAGS) -o "$@" "$<"
+%.cpp.o : %.cpp
+	$(CPP) $(CPPFLAGS) -o $@ $<
 
 
-%.o : $(RELATIVE_PATH_TO_ANCHOR)/%.cpp
-	$(CPP) $(CPPFLAGS) -o "$@" "$<"
+%.c.o : $(RELATIVE_PATH_TO_ANCHOR)/%.c
+	$(CC) $(CFLAGS) -o $@ $<
 
 
-%.o : $(MATLAB_ROOT)/rtw/c/src/%.c
-	$(CC) $(CFLAGS) -o "$@" "$<"
+%.s.o : $(RELATIVE_PATH_TO_ANCHOR)/%.s
+	$(AS) $(ASFLAGS) -o $@ $<
 
 
-%.o : $(MATLAB_ROOT)/rtw/c/src/%.cpp
-	$(CPP) $(CPPFLAGS) -o "$@" "$<"
+%.cpp.o : $(RELATIVE_PATH_TO_ANCHOR)/%.cpp
+	$(CPP) $(CPPFLAGS) -o $@ $<
 
 
-%.o : $(START_DIR)/%.c
-	$(CC) $(CFLAGS) -o "$@" "$<"
+%.c.o : $(MATLAB_ROOT)/rtw/c/src/%.c
+	$(CC) $(CFLAGS) -o $@ $<
 
 
-%.o : $(START_DIR)/%.cpp
-	$(CPP) $(CPPFLAGS) -o "$@" "$<"
+%.s.o : $(MATLAB_ROOT)/rtw/c/src/%.s
+	$(AS) $(ASFLAGS) -o $@ $<
 
 
-%.o : $(START_DIR)/codegen/lib/iomega/%.c
-	$(CC) $(CFLAGS) -o "$@" "$<"
+%.cpp.o : $(MATLAB_ROOT)/rtw/c/src/%.cpp
+	$(CPP) $(CPPFLAGS) -o $@ $<
 
 
-%.o : $(START_DIR)/codegen/lib/iomega/%.cpp
-	$(CPP) $(CPPFLAGS) -o "$@" "$<"
+%.c.o : $(START_DIR)/%.c
+	$(CC) $(CFLAGS) -o $@ $<
+
+
+%.s.o : $(START_DIR)/%.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+
+%.cpp.o : $(START_DIR)/%.cpp
+	$(CPP) $(CPPFLAGS) -o $@ $<
+
+
+%.c.o : $(START_DIR)/codegen/lib/iomega/%.c
+	$(CC) $(CFLAGS) -o $@ $<
+
+
+%.s.o : $(START_DIR)/codegen/lib/iomega/%.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+
+%.cpp.o : $(START_DIR)/codegen/lib/iomega/%.cpp
+	$(CPP) $(CPPFLAGS) -o $@ $<
 
 
 ###########################################################################
@@ -359,6 +372,7 @@ info :
 	@echo "### MODELREF_LIBS = $(MODELREF_LIBS)"
 	@echo "### SYSTEM_LIBS = $(SYSTEM_LIBS)"
 	@echo "### TOOLCHAIN_LIBS = $(TOOLCHAIN_LIBS)"
+	@echo "### ASFLAGS = $(ASFLAGS)"
 	@echo "### CFLAGS = $(CFLAGS)"
 	@echo "### LDFLAGS = $(LDFLAGS)"
 	@echo "### SHAREDLIB_LDFLAGS = $(SHAREDLIB_LDFLAGS)"
@@ -379,6 +393,7 @@ clean :
 	$(ECHO) "### Deleting all derived files..."
 	$(RM) $(PRODUCT)
 	$(RM) $(ALL_OBJS)
+	$(RM) *Object
 	$(ECHO) "### Deleted all derived files."
 
 

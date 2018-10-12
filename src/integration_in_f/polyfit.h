@@ -2,7 +2,7 @@
  * File: polyfit.h
  *
  * MATLAB Coder version            : 3.4
- * C/C++ source code generated on  : 12-Oct-2018 13:32:32
+ * C/C++ source code generated on  : 12-Oct-2018 15:40:47
  */
 
 #ifndef POLYFIT_H
@@ -16,7 +16,7 @@
 #include "rt_defines.h"
 #include "rt_nonfinite.h"
 #include "rtwtypes.h"
-#include "sliding_integration_f_types.h"
+#include "iomega_types.h"
 
 /* Function Declarations */
 extern void polyfit(const double x[512], const double y[512], double p[3]);

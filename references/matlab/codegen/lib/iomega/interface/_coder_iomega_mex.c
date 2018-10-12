@@ -2,7 +2,7 @@
  * File: _coder_iomega_mex.c
  *
  * MATLAB Coder version            : 3.4
- * C/C++ source code generated on  : 12-Oct-2018 14:10:50
+ * C/C++ source code generated on  : 12-Oct-2018 15:40:47
  */
 
 /* Include Files */
@@ -15,8 +15,8 @@ static const char * emlrtEntryPoints[2] = { "iomega", "sliding_integrate_f" };
 /* Function Declarations */
 static void iomega_mexFunction(int32_T nlhs, mxArray *plhs[1], int32_T nrhs,
   const mxArray *prhs[4]);
-static void sliding_integrate_f_mexFunction(int32_T nlhs, mxArray *plhs[2],
-  int32_T nrhs, const mxArray *prhs[3]);
+static void sliding_integrate_f_mexFunction(int32_T nlhs, mxArray *plhs[4],
+  int32_T nrhs, const mxArray *prhs[4]);
 
 /* Function Definitions */
 
@@ -75,16 +75,16 @@ static void iomega_mexFunction(int32_T nlhs, mxArray *plhs[1], int32_T nrhs,
 
 /*
  * Arguments    : int32_T nlhs
- *                const mxArray *plhs[2]
+ *                const mxArray *plhs[4]
  *                int32_T nrhs
- *                const mxArray *prhs[3]
+ *                const mxArray *prhs[4]
  * Return Type  : void
  */
-static void sliding_integrate_f_mexFunction(int32_T nlhs, mxArray *plhs[2],
-  int32_T nrhs, const mxArray *prhs[3])
+static void sliding_integrate_f_mexFunction(int32_T nlhs, mxArray *plhs[4],
+  int32_T nrhs, const mxArray *prhs[4])
 {
-  const mxArray *inputs[3];
-  const mxArray *outputs[2];
+  const mxArray *inputs[4];
+  const mxArray *outputs[4];
   int32_T b_nlhs;
   emlrtStack st = { NULL,              /* site */
     NULL,                              /* tls */
@@ -94,12 +94,12 @@ static void sliding_integrate_f_mexFunction(int32_T nlhs, mxArray *plhs[2],
   st.tls = emlrtRootTLSGlobal;
 
   /* Check for proper number of arguments. */
-  if (nrhs != 3) {
-    emlrtErrMsgIdAndTxt(&st, "EMLRT:runTime:WrongNumberOfInputs", 5, 12, 3, 4,
+  if (nrhs != 4) {
+    emlrtErrMsgIdAndTxt(&st, "EMLRT:runTime:WrongNumberOfInputs", 5, 12, 4, 4,
                         19, "sliding_integrate_f");
   }
 
-  if (nlhs > 2) {
+  if (nlhs > 4) {
     emlrtErrMsgIdAndTxt(&st, "EMLRT:runTime:TooManyOutputArguments", 3, 4, 19,
                         "sliding_integrate_f");
   }

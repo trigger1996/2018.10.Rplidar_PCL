@@ -1,18 +1,18 @@
 <deployment-project plugin="plugin.coder" plugin-version="R2016a">
-  <configuration build-checksum="826070096" file="/home/ghost/src/matlab/2018.10.slam_ekf/for_cxx/lib_iomega.prj" location="/home/ghost/src/matlab/2018.10.slam_ekf/for_cxx" name="lib_iomega" target="target.unifiedcoder" target-name="MATLAB Coder">
+  <configuration build-checksum="1380723977" file="/home/ghost/catkin_ws/src/mavros_rplidar_pcl/references/matlab/lib_iomega.prj" location="/home/ghost/catkin_ws/src/mavros_rplidar_pcl/references/matlab" name="lib_iomega" target="target.unifiedcoder" target-name="MATLAB Coder">
     <profile key="profile.mex">
-      <param.BuiltInstrumentedMex />
+      <param.BuiltInstrumentedMex>false</param.BuiltInstrumentedMex>
       <param.RanInstrumentedMex>false</param.RanInstrumentedMex>
       <param.WorkingFolder>option.WorkingFolder.Project</param.WorkingFolder>
       <param.SpecifiedWorkingFolder />
       <param.BuildFolder>option.BuildFolder.Project</param.BuildFolder>
       <param.SpecifiedBuildFolder />
       <param.SearchPaths />
-      <param.ResponsivenessChecks />
-      <param.ExtrinsicCalls />
-      <param.IntegrityChecks />
+      <param.ResponsivenessChecks>true</param.ResponsivenessChecks>
+      <param.ExtrinsicCalls>true</param.ExtrinsicCalls>
+      <param.IntegrityChecks>true</param.IntegrityChecks>
       <param.SaturateOnIntegerOverflow>true</param.SaturateOnIntegerOverflow>
-      <param.GlobalDataSyncMethod />
+      <param.GlobalDataSyncMethod>option.GlobalDataSyncMethod.SyncAlways</param.GlobalDataSyncMethod>
       <param.EnableVariableSizing>true</param.EnableVariableSizing>
       <param.DynamicMemoryAllocation>option.DynamicMemoryAllocation.Threshold</param.DynamicMemoryAllocation>
       <param.DynamicMemoryAllocationThreshold>65536</param.DynamicMemoryAllocationThreshold>
@@ -23,7 +23,7 @@
       <param.GenerateComments>true</param.GenerateComments>
       <param.MATLABSourceComments>false</param.MATLABSourceComments>
       <param.ReservedNameArray />
-      <param.EnableDebugging />
+      <param.EnableDebugging>false</param.EnableDebugging>
       <param.GenerateReport>true</param.GenerateReport>
       <param.LaunchReport>false</param.LaunchReport>
       <param.ReportPotentialDifferences>false</param.ReportPotentialDifferences>
@@ -39,13 +39,13 @@
       <param.CustomSource />
       <param.CustomLibrary />
       <param.PostCodeGenCommand />
-      <param.mex.GenCodeOnly />
+      <param.mex.GenCodeOnly>false</param.mex.GenCodeOnly>
       <param.ConstantFoldingTimeout>40000</param.ConstantFoldingTimeout>
       <param.CompileTimeRecursionLimit>50</param.CompileTimeRecursionLimit>
       <param.EnableRuntimeRecursion>true</param.EnableRuntimeRecursion>
       <param.PreserveVariableNames>option.PreserveVariableNames.None</param.PreserveVariableNames>
       <param.TargetLang>option.TargetLang.C</param.TargetLang>
-      <param.EchoExpressions />
+      <param.EchoExpressions>true</param.EchoExpressions>
       <param.InlineThreshold>10</param.InlineThreshold>
       <param.InlineThresholdMax>200</param.InlineThresholdMax>
       <param.InlineStackLimit>4000</param.InlineStackLimit>
@@ -53,11 +53,11 @@
       <param.MemcpyThreshold>64</param.MemcpyThreshold>
       <param.EnableOpenMP>true</param.EnableOpenMP>
       <param.InitFltsAndDblsToZero>true</param.InitFltsAndDblsToZero>
-      <param.ConstantInputs />
-      <param.EnableCRICodeCoverage />
+      <param.ConstantInputs>option.ConstantInputs.CheckValues</param.ConstantInputs>
+      <param.EnableCRICodeCoverage>true</param.EnableCRICodeCoverage>
       <param.EnableJIT>false</param.EnableJIT>
-      <param.EnableJITSilentBailOut />
-      <param.CheckForIssuesJIT />
+      <param.EnableJITSilentBailOut>false</param.EnableJITSilentBailOut>
+      <param.CheckForIssuesJIT>true</param.CheckForIssuesJIT>
       <unset>
         <param.BuiltInstrumentedMex />
         <param.RanInstrumentedMex />
@@ -184,7 +184,7 @@
       <param.CodeReplacementLibrary>None</param.CodeReplacementLibrary>
       <param.DeprecatedCRLFlag>false</param.DeprecatedCRLFlag>
       <param.SameHardware>true</param.SameHardware>
-      <param.Toolchain>Automatically locate an installed toolchain</param.Toolchain>
+      <param.Toolchain>Catkin</param.Toolchain>
       <param.BuildConfiguration>Faster Builds</param.BuildConfiguration>
       <param.CustomToolchainOptions />
       <var.ToolchainSettingsVisible>true</var.ToolchainSettingsVisible>
@@ -329,7 +329,6 @@
         <param.CodeReplacementLibrary />
         <param.DeprecatedCRLFlag />
         <param.SameHardware />
-        <param.Toolchain />
         <param.BuildConfiguration />
         <param.CustomToolchainOptions />
         <var.ToolchainSettingsVisible />
@@ -739,15 +738,14 @@
       </unset>
     </profile>
     <param.objective>option.objective.c</param.objective>
-    <param.WorkflowStep>generateCode</param.WorkflowStep>
+    <param.WorkflowStep>workflowSummary</param.WorkflowStep>
     <param.TestSnippets>
       <item>sliding_integrate_main</item>
-      <item>intfcn_main</item>
     </param.TestSnippets>
     <param.DefaultImportExportVariable>config</param.DefaultImportExportVariable>
     <param.ExternalFcnMajority>column</param.ExternalFcnMajority>
     <param.UseGlobals>option.UseGlobals.No</param.UseGlobals>
-    <param.outputfile>${PROJECT_ROOT}/codegen/lib/sliding_integration_f/sliding_integration_f.a</param.outputfile>
+    <param.outputfile>${PROJECT_ROOT}/codegen/lib/iomega/iomega.a</param.outputfile>
     <param.version>R2012a</param.version>
     <param.HasECoderFeatures>true</param.HasECoderFeatures>
     <param.HasGpuCoder>true</param.HasGpuCoder>
@@ -761,31 +759,31 @@
     <param.AutoInferUnboundedSizeThreshold>2048</param.AutoInferUnboundedSizeThreshold>
     <param.EnableFixedPointStep>false</param.EnableFixedPointStep>
     <param.EnableScreener>true</param.EnableScreener>
-    <param.AnnotationChecksum>317031610</param.AnnotationChecksum>
+    <param.AnnotationChecksum>4273739670</param.AnnotationChecksum>
     <var.LegacyTarget />
     <var.MirrorOnOpen>false</var.MirrorOnOpen>
     <param.FixedPointEnabled>false</param.FixedPointEnabled>
     <var.redirectedInputTypeData />
     <var.DismissScreener>true</var.DismissScreener>
     <param.unifiedParamStorage />
-    <var.gc.lastOutputRoot>codegen/lib/sliding_integration_f</var.gc.lastOutputRoot>
+    <var.gc.lastOutputRoot>codegen/lib/iomega</var.gc.lastOutputRoot>
     <var.gc.lastOutputType>C_CODE</var.gc.lastOutputType>
-    <var.gc.preBuildChecksum>95921293</var.gc.preBuildChecksum>
+    <var.gc.preBuildChecksum>447140466</var.gc.preBuildChecksum>
     <var.cfi.lastOutputRoot>codegen/mex/iomega_mex</var.cfi.lastOutputRoot>
-    <var.cfi.preBuildChecksum>4278439445</var.cfi.preBuildChecksum>
+    <var.cfi.preBuildChecksum>4175753837</var.cfi.preBuildChecksum>
     <var.lastCfiTestSnippet>sliding_integrate_main</var.lastCfiTestSnippet>
     <var.outdatedOnRestore>false</var.outdatedOnRestore>
-    <var.lastUserSourceChecksum>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;checksum&gt;&lt;includedFiles&gt;&lt;file&gt;/home/ghost/src/matlab/2018.10.slam_ekf/for_cxx/iomega.m&lt;/file&gt;&lt;file&gt;/home/ghost/src/matlab/2018.10.slam_ekf/for_cxx/sliding_integrate_f.m&lt;/file&gt;&lt;/includedFiles&gt;&lt;value&gt;2331139762&lt;/value&gt;&lt;/checksum&gt;</var.lastUserSourceChecksum>
-    <var.sourceSetState>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;sourceModel&gt;&lt;primarySourceFiles&gt;&lt;file&gt;/home/ghost/src/matlab/2018.10.slam_ekf/for_cxx/iomega.m&lt;/file&gt;&lt;file&gt;/home/ghost/src/matlab/2018.10.slam_ekf/for_cxx/sliding_integrate_f.m&lt;/file&gt;&lt;/primarySourceFiles&gt;&lt;fixedPointSourceFiles/&gt;&lt;fixedPointSourceRegistered&gt;false&lt;/fixedPointSourceRegistered&gt;&lt;fixedPointSourceSelected&gt;false&lt;/fixedPointSourceSelected&gt;&lt;/sourceModel&gt;</var.sourceSetState>
+    <var.lastUserSourceChecksum>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;checksum&gt;&lt;includedFiles&gt;&lt;file&gt;/home/ghost/catkin_ws/src/mavros_rplidar_pcl/references/matlab/iomega.m&lt;/file&gt;&lt;file&gt;/home/ghost/catkin_ws/src/mavros_rplidar_pcl/references/matlab/sliding_integrate_f.m&lt;/file&gt;&lt;/includedFiles&gt;&lt;value&gt;397839972&lt;/value&gt;&lt;/checksum&gt;</var.lastUserSourceChecksum>
+    <var.sourceSetState>&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;&lt;sourceModel&gt;&lt;primarySourceFiles&gt;&lt;file&gt;/home/ghost/catkin_ws/src/mavros_rplidar_pcl/references/matlab/iomega.m&lt;/file&gt;&lt;file&gt;/home/ghost/catkin_ws/src/mavros_rplidar_pcl/references/matlab/sliding_integrate_f.m&lt;/file&gt;&lt;/primarySourceFiles&gt;&lt;fixedPointSourceFiles/&gt;&lt;fixedPointSourceRegistered&gt;false&lt;/fixedPointSourceRegistered&gt;&lt;fixedPointSourceSelected&gt;false&lt;/fixedPointSourceSelected&gt;&lt;/sourceModel&gt;</var.sourceSetState>
     <param.forceMexBuild>false</param.forceMexBuild>
     <param.configImportActive>false</param.configImportActive>
     <var.isGpuCoder>false</var.isGpuCoder>
     <var.notGpuCoder>true</var.notGpuCoder>
     <var.boundToGui>true</var.boundToGui>
     <param.mex.outputfile>iomega_mex</param.mex.outputfile>
-    <param.grt.outputfile>sliding_integration_f</param.grt.outputfile>
+    <param.grt.outputfile>iomega</param.grt.outputfile>
     <param.artifact>option.target.artifact.lib</param.artifact>
-    <param.outputfile>${PROJECT_ROOT}/codegen/lib/sliding_integration_f/sliding_integration_f.a</param.outputfile>
+    <param.outputfile>${PROJECT_ROOT}/codegen/lib/iomega/iomega.a</param.outputfile>
     <param.EnableAutoExtrinsicCalls>true</param.EnableAutoExtrinsicCalls>
     <param.UsePreconditions>false</param.UsePreconditions>
     <param.FeatureFlags />
@@ -877,6 +875,7 @@
       <var.isGpuCoder />
       <var.notGpuCoder />
       <param.mex.outputfile />
+      <param.grt.outputfile />
       <param.EnableAutoExtrinsicCalls />
       <param.UsePreconditions />
       <param.FeatureFlags />
@@ -940,14 +939,13 @@
     </unset>
     <fileset.entrypoints>
       <file custom-data-expanded="false" value="${PROJECT_ROOT}/iomega.m">
-        <Marker>1539324612435</Marker>
+        <Marker>1539330012237</Marker>
       </file>
       <file custom-data-expanded="false" value="${PROJECT_ROOT}/sliding_integrate_f.m">
-        <Marker>1539324622302</Marker>
+        <Marker>1539330012244</Marker>
       </file>
     </fileset.entrypoints>
     <fileset.testbench>
-      <file>${PROJECT_ROOT}/intfcn_main.m</file>
       <file>${PROJECT_ROOT}/sliding_integrate_main.m</file>
     </fileset.testbench>
     <fileset.inputtypes>
@@ -978,8 +976,9 @@
         </Inputs>
       </file>
       <file custom-data-expanded="false" value="${PROJECT_ROOT}/sliding_integrate_f.m">
-        <Inputs fileName="sliding_integrate_f.m" functionName="sliding_integrate_f" nargout="2">
-          <Input Name="data_in" typeId="0" />
+        <Inputs fileName="sliding_integrate_f.m" functionName="sliding_integrate_f" nargout="4">
+          <Input Name="ax_in" typeId="0" />
+          <Input Name="ay_in" typeId="0" />
           <Input Name="ts" typeId="0" />
           <Input Name="arr_len_in" typeId="0" />
           <idpTable>
@@ -996,7 +995,7 @@
       </file>
     </fileset.inputtypes>
     <build-deliverables>
-      <file location="${PROJECT_ROOT}/codegen/lib/sliding_integration_f" name="sliding_integration_f.a" optional="false">/home/ghost/src/matlab/2018.10.slam_ekf/for_cxx/codegen/lib/sliding_integration_f/sliding_integration_f.a</file>
+      <file location="${PROJECT_ROOT}/codegen/lib/iomega" name="iomega.a" optional="false">/home/ghost/catkin_ws/src/mavros_rplidar_pcl/references/matlab/codegen/lib/iomega/iomega.a</file>
     </build-deliverables>
     <workflow />
     <matlab>

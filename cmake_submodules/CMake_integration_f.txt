@@ -5,6 +5,13 @@ set(Sliding_Integration_F_Dir
 )
 
 set(Sliding_Integration_F_Src
+    ${Sliding_Integration_F_Dir}/iomega.c
+    ${Sliding_Integration_F_Dir}/iomega_data.c
+    ${Sliding_Integration_F_Dir}/iomega_emxutil.c
+    ${Sliding_Integration_F_Dir}/iomega_rtwutil.c
+    ${Sliding_Integration_F_Dir}/iomega_terminate.c
+    ${Sliding_Integration_F_Dir}/iomega_initialize.c
+    ${Sliding_Integration_F_Dir}/sliding_integrate_f.c
     ${Sliding_Integration_F_Dir}/fft.c
     ${Sliding_Integration_F_Dir}/ifft.c
     ${Sliding_Integration_F_Dir}/sqrt.c
@@ -12,7 +19,6 @@ set(Sliding_Integration_F_Src
     ${Sliding_Integration_F_Dir}/xgerc.c
     ${Sliding_Integration_F_Dir}/xnrm2.c
     ${Sliding_Integration_F_Dir}/xswap.c
-    ${Sliding_Integration_F_Dir}/iomega.c
     ${Sliding_Integration_F_Dir}/ixamax.c
     ${Sliding_Integration_F_Dir}/vander.c
     ${Sliding_Integration_F_Dir}/xgeqp3.c
@@ -27,12 +33,6 @@ set(Sliding_Integration_F_Src
     ${Sliding_Integration_F_Dir}/rtGetNaN.c
     ${Sliding_Integration_F_Dir}/ifftshift.c
     ${Sliding_Integration_F_Dir}/rt_nonfinite.c
-    ${Sliding_Integration_F_Dir}/sliding_integrate_f.c
-    ${Sliding_Integration_F_Dir}/sliding_integration_f_data.c
-    ${Sliding_Integration_F_Dir}/sliding_integration_f_emxutil.c
-    ${Sliding_Integration_F_Dir}/sliding_integration_f_rtwutil.c
-    ${Sliding_Integration_F_Dir}/sliding_integration_f_terminate.c
-    ${Sliding_Integration_F_Dir}/sliding_integration_f_initialize.c
 )
 
 #set(Sliding_Integration_F_Include

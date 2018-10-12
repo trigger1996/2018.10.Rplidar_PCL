@@ -14,7 +14,7 @@
 <a name="2"><font color="#888888 "><i>    2   </i></font></a><font color="#117755"><I> * File: xzlarfg.c</i></font>
 <a name="3"><font color="#888888 "><i>    3   </i></font></a><font color="#117755"><I> *</i></font>
 <a name="4"><font color="#888888 "><i>    4   </i></font></a><font color="#117755"><I> * MATLAB Coder version            : 3.4</i></font>
-<a name="5"><font color="#888888 "><i>    5   </i></font></a><font color="#117755"><I> * C/C++ source code generated on  : 12-Oct-2018 14:10:50</i></font>
+<a name="5"><font color="#888888 "><i>    5   </i></font></a><font color="#117755"><I> * C/C++ source code generated on  : 12-Oct-2018 15:40:47</i></font>
 <a name="6"><font color="#888888 "><i>    6   </i></font></a><font color="#117755"><I> */</i></font>
 <a name="7"><font color="#888888 "><i>    7   </i></font></a>
 <a name="8"><font color="#888888 "><i>    8   </i></font></a><font color="#117755"><i>/* Include Files */</i></font>
@@ -39,7 +39,7 @@
 <a name="27"><font color="#888888 "><i>   27   </i></font></a>  <font color="#112266"><b>double</b></font> tau;
 <a name="28"><font color="#888888 "><i>   28   </i></font></a>  <font color="#112266"><b>double</b></font> xnorm;
 <a name="29"><font color="#888888 "><i>   29   </i></font></a>  <font color="#112266"><b>int</b></font> knt;
-<a name="30"><font color="#888888 "><i>   30   </i></font></a>  <font color="#112266"><b>int</b></font> i7;
+<a name="30"><font color="#888888 "><i>   30   </i></font></a>  <font color="#112266"><b>int</b></font> i8;
 <a name="31"><font color="#888888 "><i>   31   </i></font></a>  <font color="#112266"><b>int</b></font> k;
 <a name="32"><font color="#888888 "><i>   32   </i></font></a>  tau = 0.0;
 <a name="33"><font color="#888888 "><i>   33   </i></font></a>  <font color="#112266"><b>if</b></font> (!(n &lt;= 0)) <b>{</b>
@@ -52,10 +52,10 @@
 <a name="40"><font color="#888888 "><i>   40   </i></font></a>
 <a name="41"><font color="#888888 "><i>   41   </i></font></a>      <font color="#112266"><b>if</b></font> (fabs(xnorm) &lt; 1.0020841800044864E-292) <b>{</b>
 <a name="42"><font color="#888888 "><i>   42   </i></font></a>        knt = 0;
-<a name="43"><font color="#888888 "><i>   43   </i></font></a>        i7 = (ix0 + n) - 2;
+<a name="43"><font color="#888888 "><i>   43   </i></font></a>        i8 = (ix0 + n) - 2;
 <a name="44"><font color="#888888 "><i>   44   </i></font></a>        <font color="#112266"><b>do</b></font> <b>{</b>
 <a name="45"><font color="#888888 "><i>   45   </i></font></a>          knt++;
-<a name="46"><font color="#888888 "><i>   46   </i></font></a>          <font color="#112266"><b>for</b></font> (k = ix0; k &lt;= i7; k++) <b>{</b>
+<a name="46"><font color="#888888 "><i>   46   </i></font></a>          <font color="#112266"><b>for</b></font> (k = ix0; k &lt;= i8; k++) <b>{</b>
 <a name="47"><font color="#888888 "><i>   47   </i></font></a>            x[k - 1] *= 9.9792015476736E+291;
 <a name="48"><font color="#888888 "><i>   48   </i></font></a>          <b>}</b>
 <a name="49"><font color="#888888 "><i>   49   </i></font></a>
@@ -70,8 +70,8 @@
 <a name="58"><font color="#888888 "><i>   58   </i></font></a>
 <a name="59"><font color="#888888 "><i>   59   </i></font></a>        tau = (xnorm - *alpha1) / xnorm;
 <a name="60"><font color="#888888 "><i>   60   </i></font></a>        *alpha1 = 1.0 / (*alpha1 - xnorm);
-<a name="61"><font color="#888888 "><i>   61   </i></font></a>        i7 = (ix0 + n) - 2;
-<a name="62"><font color="#888888 "><i>   62   </i></font></a>        <font color="#112266"><b>for</b></font> (k = ix0; k &lt;= i7; k++) <b>{</b>
+<a name="61"><font color="#888888 "><i>   61   </i></font></a>        i8 = (ix0 + n) - 2;
+<a name="62"><font color="#888888 "><i>   62   </i></font></a>        <font color="#112266"><b>for</b></font> (k = ix0; k &lt;= i8; k++) <b>{</b>
 <a name="63"><font color="#888888 "><i>   63   </i></font></a>          x[k - 1] *= *alpha1;
 <a name="64"><font color="#888888 "><i>   64   </i></font></a>        <b>}</b>
 <a name="65"><font color="#888888 "><i>   65   </i></font></a>
@@ -83,8 +83,8 @@
 <a name="71"><font color="#888888 "><i>   71   </i></font></a>      <b>}</b> <font color="#112266"><b>else</b></font> <b>{</b>
 <a name="72"><font color="#888888 "><i>   72   </i></font></a>        tau = (xnorm - *alpha1) / xnorm;
 <a name="73"><font color="#888888 "><i>   73   </i></font></a>        *alpha1 = 1.0 / (*alpha1 - xnorm);
-<a name="74"><font color="#888888 "><i>   74   </i></font></a>        i7 = (ix0 + n) - 2;
-<a name="75"><font color="#888888 "><i>   75   </i></font></a>        <font color="#112266"><b>for</b></font> (k = ix0; k &lt;= i7; k++) <b>{</b>
+<a name="74"><font color="#888888 "><i>   74   </i></font></a>        i8 = (ix0 + n) - 2;
+<a name="75"><font color="#888888 "><i>   75   </i></font></a>        <font color="#112266"><b>for</b></font> (k = ix0; k &lt;= i8; k++) <b>{</b>
 <a name="76"><font color="#888888 "><i>   76   </i></font></a>          x[k - 1] *= *alpha1;
 <a name="77"><font color="#888888 "><i>   77   </i></font></a>        <b>}</b>
 <a name="78"><font color="#888888 "><i>   78   </i></font></a>
@@ -108,7 +108,7 @@
 <a name="96"><font color="#888888 "><i>   96   </i></font></a>  <font color="#112266"><b>double</b></font> tau;
 <a name="97"><font color="#888888 "><i>   97   </i></font></a>  <font color="#112266"><b>double</b></font> xnorm;
 <a name="98"><font color="#888888 "><i>   98   </i></font></a>  <font color="#112266"><b>int</b></font> knt;
-<a name="99"><font color="#888888 "><i>   99   </i></font></a>  <font color="#112266"><b>int</b></font> i3;
+<a name="99"><font color="#888888 "><i>   99   </i></font></a>  <font color="#112266"><b>int</b></font> i4;
 <a name="100"><font color="#888888 "><i>  100   </i></font></a>  <font color="#112266"><b>int</b></font> k;
 <a name="101"><font color="#888888 "><i>  101   </i></font></a>  tau = 0.0;
 <a name="102"><font color="#888888 "><i>  102   </i></font></a>  <font color="#112266"><b>if</b></font> (!(n &lt;= 0)) <b>{</b>
@@ -121,10 +121,10 @@
 <a name="109"><font color="#888888 "><i>  109   </i></font></a>
 <a name="110"><font color="#888888 "><i>  110   </i></font></a>      <font color="#112266"><b>if</b></font> (fabs(xnorm) &lt; 1.0020841800044864E-292) <b>{</b>
 <a name="111"><font color="#888888 "><i>  111   </i></font></a>        knt = 0;
-<a name="112"><font color="#888888 "><i>  112   </i></font></a>        i3 = (ix0 + n) - 2;
+<a name="112"><font color="#888888 "><i>  112   </i></font></a>        i4 = (ix0 + n) - 2;
 <a name="113"><font color="#888888 "><i>  113   </i></font></a>        <font color="#112266"><b>do</b></font> <b>{</b>
 <a name="114"><font color="#888888 "><i>  114   </i></font></a>          knt++;
-<a name="115"><font color="#888888 "><i>  115   </i></font></a>          <font color="#112266"><b>for</b></font> (k = ix0; k &lt;= i3; k++) <b>{</b>
+<a name="115"><font color="#888888 "><i>  115   </i></font></a>          <font color="#112266"><b>for</b></font> (k = ix0; k &lt;= i4; k++) <b>{</b>
 <a name="116"><font color="#888888 "><i>  116   </i></font></a>            x[k - 1] *= 9.9792015476736E+291;
 <a name="117"><font color="#888888 "><i>  117   </i></font></a>          <b>}</b>
 <a name="118"><font color="#888888 "><i>  118   </i></font></a>
@@ -139,8 +139,8 @@
 <a name="127"><font color="#888888 "><i>  127   </i></font></a>
 <a name="128"><font color="#888888 "><i>  128   </i></font></a>        tau = (xnorm - *alpha1) / xnorm;
 <a name="129"><font color="#888888 "><i>  129   </i></font></a>        *alpha1 = 1.0 / (*alpha1 - xnorm);
-<a name="130"><font color="#888888 "><i>  130   </i></font></a>        i3 = (ix0 + n) - 2;
-<a name="131"><font color="#888888 "><i>  131   </i></font></a>        <font color="#112266"><b>for</b></font> (k = ix0; k &lt;= i3; k++) <b>{</b>
+<a name="130"><font color="#888888 "><i>  130   </i></font></a>        i4 = (ix0 + n) - 2;
+<a name="131"><font color="#888888 "><i>  131   </i></font></a>        <font color="#112266"><b>for</b></font> (k = ix0; k &lt;= i4; k++) <b>{</b>
 <a name="132"><font color="#888888 "><i>  132   </i></font></a>          x[k - 1] *= *alpha1;
 <a name="133"><font color="#888888 "><i>  133   </i></font></a>        <b>}</b>
 <a name="134"><font color="#888888 "><i>  134   </i></font></a>
@@ -152,8 +152,8 @@
 <a name="140"><font color="#888888 "><i>  140   </i></font></a>      <b>}</b> <font color="#112266"><b>else</b></font> <b>{</b>
 <a name="141"><font color="#888888 "><i>  141   </i></font></a>        tau = (xnorm - *alpha1) / xnorm;
 <a name="142"><font color="#888888 "><i>  142   </i></font></a>        *alpha1 = 1.0 / (*alpha1 - xnorm);
-<a name="143"><font color="#888888 "><i>  143   </i></font></a>        i3 = (ix0 + n) - 2;
-<a name="144"><font color="#888888 "><i>  144   </i></font></a>        <font color="#112266"><b>for</b></font> (k = ix0; k &lt;= i3; k++) <b>{</b>
+<a name="143"><font color="#888888 "><i>  143   </i></font></a>        i4 = (ix0 + n) - 2;
+<a name="144"><font color="#888888 "><i>  144   </i></font></a>        <font color="#112266"><b>for</b></font> (k = ix0; k &lt;= i4; k++) <b>{</b>
 <a name="145"><font color="#888888 "><i>  145   </i></font></a>          x[k - 1] *= *alpha1;
 <a name="146"><font color="#888888 "><i>  146   </i></font></a>        <b>}</b>
 <a name="147"><font color="#888888 "><i>  147   </i></font></a>

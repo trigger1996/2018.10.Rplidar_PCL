@@ -2,7 +2,7 @@
  * File: polyfit.c
  *
  * MATLAB Coder version            : 3.4
- * C/C++ source code generated on  : 12-Oct-2018 13:32:32
+ * C/C++ source code generated on  : 12-Oct-2018 15:40:47
  */
 
 /* Include Files */
@@ -23,10 +23,10 @@
  */
 void polyfit(const double x[512], const double y[512], double p[3])
 {
-  double dv7[1536];
+  double dv8[1536];
   int rr;
-  vander(x, dv7);
-  qrsolve(dv7, y, p, &rr);
+  vander(x, dv8);
+  qrsolve(dv8, y, p, &rr);
 }
 
 /*

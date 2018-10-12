@@ -2,7 +2,7 @@
  * File: xzlarf.h
  *
  * MATLAB Coder version            : 3.4
- * C/C++ source code generated on  : 12-Oct-2018 13:32:32
+ * C/C++ source code generated on  : 12-Oct-2018 15:40:47
  */
 
 #ifndef XZLARF_H
@@ -16,7 +16,7 @@
 #include "rt_defines.h"
 #include "rt_nonfinite.h"
 #include "rtwtypes.h"
-#include "sliding_integration_f_types.h"
+#include "iomega_types.h"
 
 /* Function Declarations */
 extern void b_xzlarf(int m, int n, int iv0, double tau, double C[1536], int ic0,

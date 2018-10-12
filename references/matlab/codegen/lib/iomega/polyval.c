@@ -2,7 +2,7 @@
  * File: polyval.c
  *
  * MATLAB Coder version            : 3.4
- * C/C++ source code generated on  : 12-Oct-2018 14:10:50
+ * C/C++ source code generated on  : 12-Oct-2018 15:40:47
  */
 
 /* Include Files */
@@ -21,15 +21,15 @@
  */
 void polyval(const double p[3], const double x[512], double y[512])
 {
-  int i1;
+  int i2;
   int k;
-  for (i1 = 0; i1 < 512; i1++) {
-    y[i1] = p[0];
+  for (i2 = 0; i2 < 512; i2++) {
+    y[i2] = p[0];
   }
 
   for (k = 0; k < 2; k++) {
-    for (i1 = 0; i1 < 512; i1++) {
-      y[i1] = x[i1] * y[i1] + p[k + 1];
+    for (i2 = 0; i2 < 512; i2++) {
+      y[i2] = x[i2] * y[i2] + p[k + 1];
     }
   }
 }

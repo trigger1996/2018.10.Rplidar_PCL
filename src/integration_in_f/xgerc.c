@@ -2,7 +2,7 @@
  * File: xgerc.c
  *
  * MATLAB Coder version            : 3.4
- * C/C++ source code generated on  : 12-Oct-2018 13:32:32
+ * C/C++ source code generated on  : 12-Oct-2018 15:40:47
  */
 
 /* Include Files */
@@ -31,7 +31,7 @@ void b_xgerc(int m, int n, double alpha1, int ix0, const double y[3], double A
   int j;
   double temp;
   int ix;
-  int i10;
+  int i11;
   int ijA;
   if (!(alpha1 == 0.0)) {
     jA = ia0 - 1;
@@ -40,8 +40,8 @@ void b_xgerc(int m, int n, double alpha1, int ix0, const double y[3], double A
       if (y[jy] != 0.0) {
         temp = y[jy] * alpha1;
         ix = ix0;
-        i10 = m + jA;
-        for (ijA = jA; ijA + 1 <= i10; ijA++) {
+        i11 = m + jA;
+        for (ijA = jA; ijA + 1 <= i11; ijA++) {
           A[ijA] += A[ix - 1] * temp;
           ix++;
         }
@@ -71,7 +71,7 @@ void xgerc(int m, int n, double alpha1, int ix0, const double y[2], double A
   int j;
   double temp;
   int ix;
-  int i6;
+  int i7;
   int ijA;
   if (!(alpha1 == 0.0)) {
     jA = ia0 - 1;
@@ -80,8 +80,8 @@ void xgerc(int m, int n, double alpha1, int ix0, const double y[2], double A
       if (y[jy] != 0.0) {
         temp = y[jy] * alpha1;
         ix = ix0;
-        i6 = m + jA;
-        for (ijA = jA; ijA + 1 <= i6; ijA++) {
+        i7 = m + jA;
+        for (ijA = jA; ijA + 1 <= i7; ijA++) {
           A[ijA] += A[ix - 1] * temp;
           ix++;
         }

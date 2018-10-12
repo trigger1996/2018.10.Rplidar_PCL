@@ -2,7 +2,7 @@
  * File: iomega.c
  *
  * MATLAB Coder version            : 3.4
- * C/C++ source code generated on  : 12-Oct-2018 13:32:32
+ * C/C++ source code generated on  : 12-Oct-2018 15:40:47
  */
 
 /* Include Files */
@@ -11,9 +11,9 @@
 #include "sliding_integrate_f.h"
 #include "ifft.h"
 #include "ifftshift.h"
-#include "sliding_integration_f_emxutil.h"
+#include "iomega_emxutil.h"
 #include "fft.h"
-#include "sliding_integration_f_rtwutil.h"
+#include "iomega_rtwutil.h"
 
 /* Function Declarations */
 static double rt_atan2d_snf(double u0, double u1);

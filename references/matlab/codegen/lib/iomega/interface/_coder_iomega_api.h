@@ -2,7 +2,7 @@
  * File: _coder_iomega_api.h
  *
  * MATLAB Coder version            : 3.4
- * C/C++ source code generated on  : 12-Oct-2018 14:10:50
+ * C/C++ source code generated on  : 12-Oct-2018 15:40:47
  */
 
 #ifndef _CODER_IOMEGA_API_H
@@ -28,10 +28,10 @@ extern void iomega_atexit(void);
 extern void iomega_initialize(void);
 extern void iomega_terminate(void);
 extern void iomega_xil_terminate(void);
-extern void sliding_integrate_f(real_T data_in, real_T ts, real_T arr_len_in,
-  real_T *dst, real_T *vel);
-extern void sliding_integrate_f_api(const mxArray * const prhs[3], const mxArray
-  *plhs[2]);
+extern void sliding_integrate_f(real_T ax_in, real_T ay_in, real_T ts, real_T
+  arr_len_in, real_T *dst_x, real_T *dst_y, real_T *vel_x, real_T *vel_y);
+extern void sliding_integrate_f_api(const mxArray * const prhs[4], const mxArray
+  *plhs[4]);
 
 #endif
 

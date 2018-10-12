@@ -50,12 +50,8 @@ protected:
     double roll, pitch, yaw;
 
     const static int acc_iir_order = 10;                                    // 加速度滤波器阶数
-    const static int vel_iir_order = 3;
-    const static int dst_iir_order = 10;
 
     Iir::Butterworth::LowPass<acc_iir_order>  acc_x_lpf, acc_y_lpf;         // 加速度主要处理其高频分量，其实最好是带通，但是带通非常难调
-    Iir::Butterworth::HighPass<vel_iir_order> vel_x_hpf, vel_y_hpf;         // 在积分后的发散主要是由于低频分量，所以这里反而做高通
-    Iir::Butterworth::HighPass<dst_iir_order> dst_x_hpf, dst_y_hpf;
 
     void integrate_in_F();  // 频域积分
 

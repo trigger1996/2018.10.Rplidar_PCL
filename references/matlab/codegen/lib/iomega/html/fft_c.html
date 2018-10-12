@@ -14,7 +14,7 @@
 <a name="2"><font color="#888888 "><i>    2   </i></font></a><font color="#117755"><I> * File: fft.c</i></font>
 <a name="3"><font color="#888888 "><i>    3   </i></font></a><font color="#117755"><I> *</i></font>
 <a name="4"><font color="#888888 "><i>    4   </i></font></a><font color="#117755"><I> * MATLAB Coder version            : 3.4</i></font>
-<a name="5"><font color="#888888 "><i>    5   </i></font></a><font color="#117755"><I> * C/C++ source code generated on  : 12-Oct-2018 14:10:50</i></font>
+<a name="5"><font color="#888888 "><i>    5   </i></font></a><font color="#117755"><I> * C/C++ source code generated on  : 12-Oct-2018 15:40:47</i></font>
 <a name="6"><font color="#888888 "><i>    6   </i></font></a><font color="#117755"><I> */</i></font>
 <a name="7"><font color="#888888 "><i>    7   </i></font></a>
 <a name="8"><font color="#888888 "><i>    8   </i></font></a><font color="#117755"><i>/* Include Files */</i></font>
@@ -45,7 +45,7 @@
 <a name="33"><font color="#888888 "><i>   33   </i></font></a>  <font color="#112266"><b>int</b></font> j;
 <a name="34"><font color="#888888 "><i>   34   </i></font></a>  <font color="#112266"><b>double</b></font> twid_re;
 <a name="35"><font color="#888888 "><i>   35   </i></font></a>  <font color="#112266"><b>double</b></font> twid_im;
-<a name="36"><font color="#888888 "><i>   36   </i></font></a>  <font color="#112266"><b>static</b></font> <font color="#112266"><b>const</b></font> <font color="#112266"><b>double</b></font> dv4[257] = <b>{</b> 0.0, -0.012271538285719925,
+<a name="36"><font color="#888888 "><i>   36   </i></font></a>  <font color="#112266"><b>static</b></font> <font color="#112266"><b>const</b></font> <font color="#112266"><b>double</b></font> dv6[257] = <b>{</b> 0.0, -0.012271538285719925,
 <a name="37"><font color="#888888 "><i>   37   </i></font></a>    -0.024541228522912288, -0.036807222941358832, -0.049067674327418015,
 <a name="38"><font color="#888888 "><i>   38   </i></font></a>    -0.061320736302208578, -0.073564563599667426, -0.0857973123444399,
 <a name="39"><font color="#888888 "><i>   39   </i></font></a>    -0.0980171403295606, -0.11022220729388306, -0.1224106751992162,
@@ -179,7 +179,7 @@
 <a name="167"><font color="#888888 "><i>  167   </i></font></a>    istart = 1;
 <a name="168"><font color="#888888 "><i>  168   </i></font></a>    <font color="#112266"><b>for</b></font> (j = ju; j &lt; 256; j += ju) <b>{</b>
 <a name="169"><font color="#888888 "><i>  169   </i></font></a>      twid_re = <a href="iomega_data_c.html#var_dv0" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_dv0');" target="_self"><font color="#1122aa">dv0</font></a>[j];
-<a name="170"><font color="#888888 "><i>  170   </i></font></a>      twid_im = dv4[j];
+<a name="170"><font color="#888888 "><i>  170   </i></font></a>      twid_im = dv6[j];
 <a name="171"><font color="#888888 "><i>  171   </i></font></a>      i = istart;
 <a name="172"><font color="#888888 "><i>  172   </i></font></a>      ihi = istart + iheight;
 <a name="173"><font color="#888888 "><i>  173   </i></font></a>      <font color="#112266"><b>while</b></font> (i &lt; ihi) <b>{</b>

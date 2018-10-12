@@ -2,7 +2,7 @@
  * File: xzlarfg.c
  *
  * MATLAB Coder version            : 3.4
- * C/C++ source code generated on  : 12-Oct-2018 14:10:50
+ * C/C++ source code generated on  : 12-Oct-2018 15:40:47
  */
 
 /* Include Files */
@@ -27,7 +27,7 @@ double b_xzlarfg(int n, double *alpha1, double x[1536], int ix0)
   double tau;
   double xnorm;
   int knt;
-  int i7;
+  int i8;
   int k;
   tau = 0.0;
   if (!(n <= 0)) {
@@ -40,10 +40,10 @@ double b_xzlarfg(int n, double *alpha1, double x[1536], int ix0)
 
       if (fabs(xnorm) < 1.0020841800044864E-292) {
         knt = 0;
-        i7 = (ix0 + n) - 2;
+        i8 = (ix0 + n) - 2;
         do {
           knt++;
-          for (k = ix0; k <= i7; k++) {
+          for (k = ix0; k <= i8; k++) {
             x[k - 1] *= 9.9792015476736E+291;
           }
 
@@ -58,8 +58,8 @@ double b_xzlarfg(int n, double *alpha1, double x[1536], int ix0)
 
         tau = (xnorm - *alpha1) / xnorm;
         *alpha1 = 1.0 / (*alpha1 - xnorm);
-        i7 = (ix0 + n) - 2;
-        for (k = ix0; k <= i7; k++) {
+        i8 = (ix0 + n) - 2;
+        for (k = ix0; k <= i8; k++) {
           x[k - 1] *= *alpha1;
         }
 
@@ -71,8 +71,8 @@ double b_xzlarfg(int n, double *alpha1, double x[1536], int ix0)
       } else {
         tau = (xnorm - *alpha1) / xnorm;
         *alpha1 = 1.0 / (*alpha1 - xnorm);
-        i7 = (ix0 + n) - 2;
-        for (k = ix0; k <= i7; k++) {
+        i8 = (ix0 + n) - 2;
+        for (k = ix0; k <= i8; k++) {
           x[k - 1] *= *alpha1;
         }
 
@@ -96,7 +96,7 @@ double xzlarfg(int n, double *alpha1, double x[1024], int ix0)
   double tau;
   double xnorm;
   int knt;
-  int i3;
+  int i4;
   int k;
   tau = 0.0;
   if (!(n <= 0)) {
@@ -109,10 +109,10 @@ double xzlarfg(int n, double *alpha1, double x[1024], int ix0)
 
       if (fabs(xnorm) < 1.0020841800044864E-292) {
         knt = 0;
-        i3 = (ix0 + n) - 2;
+        i4 = (ix0 + n) - 2;
         do {
           knt++;
-          for (k = ix0; k <= i3; k++) {
+          for (k = ix0; k <= i4; k++) {
             x[k - 1] *= 9.9792015476736E+291;
           }
 
@@ -127,8 +127,8 @@ double xzlarfg(int n, double *alpha1, double x[1024], int ix0)
 
         tau = (xnorm - *alpha1) / xnorm;
         *alpha1 = 1.0 / (*alpha1 - xnorm);
-        i3 = (ix0 + n) - 2;
-        for (k = ix0; k <= i3; k++) {
+        i4 = (ix0 + n) - 2;
+        for (k = ix0; k <= i4; k++) {
           x[k - 1] *= *alpha1;
         }
 
@@ -140,8 +140,8 @@ double xzlarfg(int n, double *alpha1, double x[1024], int ix0)
       } else {
         tau = (xnorm - *alpha1) / xnorm;
         *alpha1 = 1.0 / (*alpha1 - xnorm);
-        i3 = (ix0 + n) - 2;
-        for (k = ix0; k <= i3; k++) {
+        i4 = (ix0 + n) - 2;
+        for (k = ix0; k <= i4; k++) {
           x[k - 1] *= *alpha1;
         }
 

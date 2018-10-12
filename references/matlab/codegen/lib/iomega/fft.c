@@ -2,7 +2,7 @@
  * File: fft.c
  *
  * MATLAB Coder version            : 3.4
- * C/C++ source code generated on  : 12-Oct-2018 14:10:50
+ * C/C++ source code generated on  : 12-Oct-2018 15:40:47
  */
 
 /* Include Files */
@@ -33,7 +33,7 @@ void fft(const double x[512], creal_T y[512])
   int j;
   double twid_re;
   double twid_im;
-  static const double dv4[257] = { 0.0, -0.012271538285719925,
+  static const double dv6[257] = { 0.0, -0.012271538285719925,
     -0.024541228522912288, -0.036807222941358832, -0.049067674327418015,
     -0.061320736302208578, -0.073564563599667426, -0.0857973123444399,
     -0.0980171403295606, -0.11022220729388306, -0.1224106751992162,
@@ -167,7 +167,7 @@ void fft(const double x[512], creal_T y[512])
     istart = 1;
     for (j = ju; j < 256; j += ju) {
       twid_re = dv0[j];
-      twid_im = dv4[j];
+      twid_im = dv6[j];
       i = istart;
       ihi = istart + iheight;
       while (i < ihi) {

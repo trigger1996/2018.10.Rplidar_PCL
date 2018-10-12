@@ -14,7 +14,7 @@ single_len = floor(tx / dt);
 
 
 % roll pitch yaw ax ay az
-raw = importdata('../acc_dataset_5_100Hz.txt');
+raw = importdata('dataset/acc_dataset_4_100Hz.txt');
 
 
 roll  = raw(:, 1);
@@ -63,26 +63,45 @@ ay = Bf;
 ax = ax .* cosd(pitch);
 ay = ay .* cosd(roll);
 
-%sliding_integrate_f(ax(1, :), dt, []);      % 复位积分函数，这个是因为matlab的global怎么都删不掉，所以只好这样
+%sliding_integrate_f(ax(1, :), ay(1, :), dt, []);      % 复位积分函数，这个是因为matlab的global怎么都删不掉，所以只好这样
+                                                      % 转C语言的时候记得屏蔽掉这些
 
 filter_len = 512;
 for i = 1 : len
-    [ dst_x_out(i, :), vel_x_out(i, :) ] = sliding_integrate_f(ax(i, :), dt, filter_len);
+    [ dst_x_out(i, :), dst_y_out(i, :), vel_x_out(i, :), vel_y_out(i, :) ] = sliding_integrate_f(ax(i, :), ay(i, :), dt, filter_len);
 end
 
+
+%% 作图
+%  X在左, Y在右
+% x
 vel = [];
 vel = vel_x_out;
 dst = [];
 dst = dst_x_out;
-
 t = 0 : dt : (size(dst, 1) - 1) * dt;
 
-%% 作图
-subplot(2, 1, 1);
+subplot(2, 2, 1);
     plot(t, vel, 'b');
     hold on;
     plot(t, ax, 'r');
-subplot(2, 1, 2);
+subplot(2, 2, 3);
     plot(t, vel, 'b');
     hold on;
-    plot(t, dst, 'g');    
+    plot(t, dst, 'g');
+
+%y
+vel = [];
+vel = vel_y_out;
+dst = [];
+dst = dst_y_out;
+t = 0 : dt : (size(dst, 1) - 1) * dt;
+
+subplot(2, 2, 2);
+    plot(t, vel, 'b');
+    hold on;
+    plot(t, ax, 'r');
+subplot(2, 2, 4);
+    plot(t, vel, 'b');
+    hold on;
+    plot(t, dst, 'g');        

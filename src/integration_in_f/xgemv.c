@@ -2,7 +2,7 @@
  * File: xgemv.c
  *
  * MATLAB Coder version            : 3.4
- * C/C++ source code generated on  : 12-Oct-2018 13:32:32
+ * C/C++ source code generated on  : 12-Oct-2018 15:40:47
  */
 
 /* Include Files */
@@ -27,11 +27,11 @@ void b_xgemv(int m, int n, const double A[1536], int ia0, const double x[1536],
              int ix0, double y[3])
 {
   int iy;
-  int i8;
+  int i9;
   int iac;
   int ix;
   double c;
-  int i9;
+  int i10;
   int ia;
   if (n != 0) {
     for (iy = 1; iy <= n; iy++) {
@@ -39,12 +39,12 @@ void b_xgemv(int m, int n, const double A[1536], int ia0, const double x[1536],
     }
 
     iy = 0;
-    i8 = ia0 + ((n - 1) << 9);
-    for (iac = ia0; iac <= i8; iac += 512) {
+    i9 = ia0 + ((n - 1) << 9);
+    for (iac = ia0; iac <= i9; iac += 512) {
       ix = ix0;
       c = 0.0;
-      i9 = (iac + m) - 1;
-      for (ia = iac; ia <= i9; ia++) {
+      i10 = (iac + m) - 1;
+      for (ia = iac; ia <= i10; ia++) {
         c += A[ia - 1] * x[ix - 1];
         ix++;
       }
@@ -69,11 +69,11 @@ void xgemv(int m, int n, const double A[1024], int ia0, const double x[1024],
            int ix0, double y[2])
 {
   int iy;
-  int i4;
+  int i5;
   int iac;
   int ix;
   double c;
-  int i5;
+  int i6;
   int ia;
   if (n != 0) {
     for (iy = 1; iy <= n; iy++) {
@@ -81,12 +81,12 @@ void xgemv(int m, int n, const double A[1024], int ia0, const double x[1024],
     }
 
     iy = 0;
-    i4 = ia0 + ((n - 1) << 9);
-    for (iac = ia0; iac <= i4; iac += 512) {
+    i5 = ia0 + ((n - 1) << 9);
+    for (iac = ia0; iac <= i5; iac += 512) {
       ix = ix0;
       c = 0.0;
-      i5 = (iac + m) - 1;
-      for (ia = iac; ia <= i5; ia++) {
+      i6 = (iac + m) - 1;
+      for (ia = iac; ia <= i6; ia++) {
         c += A[ia - 1] * x[ix - 1];
         ix++;
       }
