@@ -12,6 +12,9 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#define IMU_RATE    100.0       // Hz
+
+
 #ifndef _countof
 #define _countof(_Array) (int)(sizeof(_Array) / sizeof(_Array[0]))
 #endif

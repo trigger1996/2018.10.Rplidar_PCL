@@ -8,6 +8,10 @@
 using namespace std;
 using namespace Eigen;
 
+#define IMU_ACC_CUTOFF 15.0     // Hz
+#define IMU_VEL_CUTOFF 0.01     // Hz
+#define IMU_DST_CUTOFF 0.01     // Hz
+
 // https://wenku.baidu.com/view/63441d4aa5e9856a561260ed.html
 
 // 这个代码是不可能模块化的，要么就直接重写
@@ -18,7 +22,7 @@ public:
 
     void reset();
 
-    void update_Estimation(double acc_x_in, double acc_y_in);
+    void update_Estimation(double acc_x_in, double acc_y_in, double _roll, double _pitch, double _yaw);
 
     void update_Measurement(double lidar_x_in, double lidar_y_in);
 
@@ -34,14 +38,24 @@ protected:
     MatrixXd K;             // 卡尔曼增益
     MatrixXd Q, R;          // 观测噪声
 
+    double dt;
+
     double acc_x_imu, acc_y_imu;
+    double acc_x,     acc_y;
     double vel_x_imu, vel_y_imu;
-    double vel_x, vel_y;
-    double x, y;
+    double vel_x,     vel_y;
+    double x_imu,     y_imu;
+    double x,         y;
 
-    const static char acc_iir_order = 10;
+    double roll, pitch, yaw;
 
-    Iir::Butterworth::LowPass<acc_iir_order> acc_x_lpf, acc_y_lpf;
+    const static int acc_iir_order = 10;                                    // 加速度滤波器阶数
+    const static int vel_iir_order = 3;
+    const static int dst_iir_order = 10;
+
+    Iir::Butterworth::LowPass<acc_iir_order>  acc_x_lpf, acc_y_lpf;         // 加速度主要处理其高频分量，其实最好是带通，但是带通非常难调
+    Iir::Butterworth::HighPass<vel_iir_order> vel_x_hpf, vel_y_hpf;         // 在积分后的发散主要是由于低频分量，所以这里反而做高通
+    Iir::Butterworth::HighPass<dst_iir_order> dst_x_hpf, dst_y_hpf;
 
     void integrate_in_F();  // 频域积分
 

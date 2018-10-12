@@ -231,13 +231,18 @@ set(lidar_src
 ##
 # Submodules
 include(
-cmake_submodules/CMake_iir.txt      # iir
+cmake_submodules/CMake_iir.txt                  # iir
+)
+
+include(
+cmake_submodules/CMake_integration_f.txt        # integration_f
 )
 
 include_directories(
    ${PCL_INCLUDE_DIRS}
    ${lidar_include_dir}
    ${IIR_DIR}
+   ${Sliding_Integration_F_Dir}
 )
 
 add_executable(main_rplidar_pcl
@@ -255,6 +260,7 @@ target_link_libraries(main_rplidar_pcl
     ${PCL_LIBRARIES}
 
     iir
+    sliding_integration_f
 )
 
 add_dependencies(main_rplidar_pcl

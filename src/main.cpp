@@ -1,3 +1,28 @@
+/*
+机体坐标系：
+
+           机头方向
+            x/绕轴转是roll
+            ^
+            |
+            |
+            o-----> y/绕轴转是pitch
+                            机身右侧
+
+PCL坐标系：
+           对话框上方
+            |
+            o-----> x
+            |               对话框右方
+            |
+            V y
+
+需要注意：在使用地磁转向后
+            Y正方向是北
+            X正方向是西
+
+*/
+
 #include "include/config.h"
 #include <iostream>
 #include <cmath>
@@ -38,8 +63,8 @@ void state_cb(const mavros_msgs::State::ConstPtr& msg){
     current_state = *msg;
 }
 
-geometry_msgs::Vector3 Current_euler;
-geometry_msgs::Vector3 Current_acc;
+static geometry_msgs::Vector3 Current_euler;
+static geometry_msgs::Vector3 Current_acc;
 void imuqua_cb(const sensor_msgs::Imu& msg){
     tf::Quaternion IMU_q(msg.orientation.x,msg.orientation.y,msg.orientation.z,msg.orientation.w);
     tf::Matrix3x3 m(IMU_q);
@@ -48,34 +73,48 @@ void imuqua_cb(const sensor_msgs::Imu& msg){
     //Current_euler.y=-Current_euler.y;
     Current_acc = msg.linear_acceleration;
 
-    //struct timeval t;
-    //gettimeofday(&t, NULL);
-    //cout << (double)t.tv_usec / 1000. << endl;
+    kf->update_Estimation(Current_acc.x, Current_acc.y, Current_euler.x, Current_euler.y, Current_euler.z);
+
+//    struct timeval t;
+//    gettimeofday(&t, NULL);
+//    cout << (double)t.tv_usec / 1000. << "Current_acc.x: " << Current_acc.x <<  endl;
 }
 
 static bool is_thread_running = false;
 void *ros_thread(void *arg);
 void *lidar_slam_thread(void *arg);
+void *lidar_slam_keyframe_thread(void *arg);
 
-void laser_imu_fusion(vector<__scandot> data, double roll, double pitch, double yaw);
+void laser_imu_fusion(vector<__scandot> &data, double roll, double pitch, double yaw);
 bool rotate_Grid2Grid(double &x, double &y, double &z, double roll, double pitch, double yaw);
 
 int main(int argc, char *argv[]) {
     int err;
-    pthread_t ros_thread_id, lidar_thread_id;
+    pthread_t ros_thread_id, lidar_thread_id, lidar_keyframe_thread_id;
+
+    ros::init(argc, argv, "offboard_rplidar_node");
+    signal(SIGINT, ctrlc);
+
+    // ROS线程
     err = pthread_create(&ros_thread_id, NULL, ros_thread, NULL);
     if (err != 0) {
         fprintf(stderr,"ros thread created fail.\n");
         exit(-1);
     }
 
+    // SLAM主线程
     err = pthread_create(&lidar_thread_id, NULL, lidar_slam_thread, NULL);
     if (err != 0) {
         fprintf(stderr,"ros thread created fail.\n");
         exit(-1);
     }
 
-    ros::init(argc, argv, "offboard_rplidar_node");
+    // SLAM关键帧线程
+    err = pthread_create(&lidar_keyframe_thread_id, NULL, lidar_slam_keyframe_thread, NULL);
+    if (err != 0) {
+        fprintf(stderr,"ros thread created fail.\n");
+        exit(-1);
+    }
 
     sleep(3);
     while (is_thread_running) {
@@ -84,8 +123,9 @@ int main(int argc, char *argv[]) {
     }
 
     sleep(1);
-
-    pthread_join(ros_thread_id, NULL);
+    pthread_join(ros_thread_id,            NULL);
+    pthread_join(lidar_thread_id,          NULL);
+    pthread_join(lidar_keyframe_thread_id, NULL);
     return 0;
 }
 
@@ -94,7 +134,7 @@ void *ros_thread(void *arg) {
     ros::NodeHandle nh;
 
     //the setpoint publishing rate MUST be faster than 2Hz
-    ros::Rate rate(100.0);          // Hz
+    ros::Rate rate(IMU_RATE);          // Hz
 
     ros::Subscriber state_sub = nh.subscribe<mavros_msgs::State>
                 ("mavros/state", 10, state_cb);
@@ -106,8 +146,6 @@ void *ros_thread(void *arg) {
                 ("mavros/set_mode");
     ros::Subscriber imuqua_sub = nh.subscribe
                 ("mavros/imu/data", 10, imuqua_cb);
-
-    signal(SIGINT, ctrlc);
 
     // wait for FCU connection
     while(ros::ok() && !current_state.connected){
@@ -180,6 +218,8 @@ void *lidar_slam_thread(void *arg) {
 
     lidar->init();                  // 构造那边的init会失效
 
+    kf->reset();                    // 卡尔曼滤波器复位
+
     while (is_thread_running) {
         if (lidar->update_Data()) {
             if(lidar->get_Data().size() && lidar->get_LastData().size()) {
@@ -191,15 +231,15 @@ void *lidar_slam_thread(void *arg) {
                 laser_imu_fusion(data, Current_euler.x, Current_euler.y, Current_euler.z);// 利用飞控测得地磁偏航角锁定激光雷达的旋转，尝试获得更高的精度
                 laser_imu_fusion(data_last, Current_euler.x, Current_euler.y, Current_euler.z);
 
+                /// 点云配准
                 reg->set_Src_PointCloud(data_last);
                 reg->set_Ref_PointCloud(data);
-
                 reg->update();
 
                 x += reg->get_dx();
                 y += reg->get_dy();
 
-                cout << "x: " << x << " y: " << y << endl;      // cm
+                //cout << "x: " << x << " y: " << y << endl;      // cm
             }
         }
     }
@@ -209,18 +249,27 @@ void *lidar_slam_thread(void *arg) {
     return ((void*)0);
 }
 
-void laser_imu_fusion(vector<__scandot> data, double roll, double pitch, double yaw) {
+void *lidar_slam_keyframe_thread(void *arg) {
+    while (is_thread_running) {
+
+    }
+
+    return ((void*)0);
+}
+
+
+void laser_imu_fusion(vector<__scandot> &data, double roll, double pitch, double yaw) {
     for (int i = 0; i < data.size(); i++) {
         // 做倾角补偿
         double x, y, z;
-        x = data[i].dst * cos(data[i].angle * 3.14 / M_PI);
-        y = data[i].dst * sin(data[i].angle * 3.14 / M_PI);
+        x = data[i].dst * cos(data[i].angle * 180. / M_PI);
+        y = data[i].dst * sin(data[i].angle * 180. / M_PI);
         z = 0;
-        rotate_Grid2Grid(x, y, z, -roll, -pitch, -yaw); // Current_euler.x, Current_euler.y, data[i].angle * 3.14 / PI
+        rotate_Grid2Grid(x, y, z, -roll, -pitch, -yaw);         // Current_euler.x, Current_euler.y, data[i].angle * 3.14 / PI
         data[i].dst = sqrt(x*x + y*y);
 
         // 做旋转补偿
-        data[i].angle -= Current_euler.z * 180 / M_PI + 90.;
+        data[i].angle -= Current_euler.z * 180. / M_PI + 90.;
         while (data[i].angle < 0)
             data[i].angle += 360;
         while (data[i].angle > 360)

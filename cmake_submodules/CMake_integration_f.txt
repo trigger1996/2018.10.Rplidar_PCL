@@ -1,0 +1,45 @@
+cmake_minimum_required(VERSION 2.8.3)
+
+set(Sliding_Integration_F_Dir
+    src/integration_in_f
+)
+
+set(Sliding_Integration_F_Src
+    ${Sliding_Integration_F_Dir}/fft.c
+    ${Sliding_Integration_F_Dir}/ifft.c
+    ${Sliding_Integration_F_Dir}/sqrt.c
+    ${Sliding_Integration_F_Dir}/xgemv.c
+    ${Sliding_Integration_F_Dir}/xgerc.c
+    ${Sliding_Integration_F_Dir}/xnrm2.c
+    ${Sliding_Integration_F_Dir}/xswap.c
+    ${Sliding_Integration_F_Dir}/iomega.c
+    ${Sliding_Integration_F_Dir}/ixamax.c
+    ${Sliding_Integration_F_Dir}/vander.c
+    ${Sliding_Integration_F_Dir}/xgeqp3.c
+    ${Sliding_Integration_F_Dir}/xzlarf.c
+    ${Sliding_Integration_F_Dir}/detrend.c
+    ${Sliding_Integration_F_Dir}/polyfit.c
+    ${Sliding_Integration_F_Dir}/polyval.c
+    ${Sliding_Integration_F_Dir}/qrsolve.c
+    ${Sliding_Integration_F_Dir}/xzlarfg.c
+    ${Sliding_Integration_F_Dir}/mldivide.c
+    ${Sliding_Integration_F_Dir}/rtGetInf.c
+    ${Sliding_Integration_F_Dir}/rtGetNaN.c
+    ${Sliding_Integration_F_Dir}/ifftshift.c
+    ${Sliding_Integration_F_Dir}/rt_nonfinite.c
+    ${Sliding_Integration_F_Dir}/sliding_integrate_f.c
+    ${Sliding_Integration_F_Dir}/sliding_integration_f_data.c
+    ${Sliding_Integration_F_Dir}/sliding_integration_f_emxutil.c
+    ${Sliding_Integration_F_Dir}/sliding_integration_f_rtwutil.c
+    ${Sliding_Integration_F_Dir}/sliding_integration_f_terminate.c
+    ${Sliding_Integration_F_Dir}/sliding_integration_f_initialize.c
+)
+
+#set(Sliding_Integration_F_Include
+#    ${Sliding_Integration_F_Dir}/*.h
+#)
+
+add_library(sliding_integration_f
+    SHARED
+    ${Sliding_Integration_F_Src}
+)
