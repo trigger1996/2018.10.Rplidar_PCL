@@ -201,7 +201,7 @@ include_directories(
 
 
 ## boost
-find_package(Boost 1.68.0 REQUIRED)			# 这里故意调高版本，其实用不着那么高的，但是机子装了两套boost，怕冲突
+find_package(Boost 1.64.0 REQUIRED)
 
 # pcl
 find_package(PCL REQUIRED)
