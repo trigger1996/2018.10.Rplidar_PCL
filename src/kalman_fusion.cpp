@@ -1,5 +1,5 @@
 #include "include/kalman_fusion.h"
-#include "integration_in_f/sliding_integrate_f.h"
+#include "matlab_lib/include/sliding_integration_in_f.h"
 
 using namespace Iir;
 

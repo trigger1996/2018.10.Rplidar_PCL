@@ -19,6 +19,7 @@
 
 /* Function Definitions */
 
+
 /*
  * Arguments    : double A[1536]
  *                double tau[3]
@@ -173,7 +174,6 @@ void xgeqp3(double A[1024], double tau[2], int jpvt[2])
     }
   }
 }
-
 /*
  * File trailer for xgeqp3.c
  *

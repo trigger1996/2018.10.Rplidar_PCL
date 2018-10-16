@@ -199,6 +199,8 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
+##
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 ## boost
 find_package(Boost 1.64.0 REQUIRED)
@@ -247,6 +249,11 @@ include_directories(
 
 add_executable(main_rplidar_pcl
     ${lidar_src}
+
+    src/matlab_lib/x.cpp
+    src/matlab_lib/matlab_math.cpp
+    src/matlab_lib/inte_util.cpp
+    src/matlab_lib/sliding_integration_in_f.cpp
 
     src/lidar_driver.cpp
     src/registration_icp_ndt.cpp

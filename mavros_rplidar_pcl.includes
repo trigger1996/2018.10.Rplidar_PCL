@@ -13,3 +13,5 @@ src/iir1/iir
 cmake_submodules
 src/iir1/test
 src/integration_in_f
+src/matlab_lib
+src/matlab_lib/include
