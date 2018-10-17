@@ -208,7 +208,13 @@ find_package(Boost 1.64.0 REQUIRED)
 # pcl
 find_package(PCL REQUIRED)
 
-set(PCL_INCLUDE_DIRS /usr/local/include/pcl-1.8)
+# qt
+find_package(Qt5 COMPONENTS Core Gui Qml Quick REQUIRED)   # 加这个因为Debian使用自带的PCL库(apt-get安装)的时候需要qt
+
+#set(PCL_INCLUDE_DIRS /usr/local/include/pcl-1.8)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_definitions(${PCL_DEFINITIONS})
 
@@ -242,6 +248,7 @@ cmake_submodules/CMake_integration_f.txt        # integration_f
 
 include_directories(
    ${PCL_INCLUDE_DIRS}
+   ${Qt5_INCLUDE_DIRS}
    ${lidar_include_dir}
    ${IIR_DIR}
    ${Sliding_Integration_F_Dir}
@@ -265,6 +272,7 @@ target_link_libraries(main_rplidar_pcl
     ${catkin_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     ${PCL_LIBRARIES}
+    ${Qt5_LIBRARIES}
 
     iir
     sliding_integration_f

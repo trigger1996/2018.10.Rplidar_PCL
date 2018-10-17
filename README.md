@@ -16,7 +16,14 @@
             sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 80
             sudo update-alternatives --config g++
 
-            *special thanks to https://blog.csdn.net/weixin_35762621/article/details/80336291
+            * special thanks to https://blog.csdn.net/weixin_35762621/article/details/80336291
+
+    ## For Debian stretch
+        Tested on win10 subsystem(Debian)
+        In this platform, PCL is not successfully compiled so apt-get install is used to fetch PCL library.
+
+            Added Qt libraries in CMakeLists.txt
+            * special thanks to https://www.jianshu.com/p/7eeb6f79a275
 
 ## To Install
     git clone https://github.com/trigger1996/2018.10.Rplidar_PCL/
