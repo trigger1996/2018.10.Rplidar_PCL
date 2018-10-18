@@ -26,6 +26,10 @@
             make
             sudo make install
 
+        When Testing...
+            sudo chmod 777 /dev/ttyUSB0
+            sudo chmod 777 /dev/ttyS1
+
             Added 1.8 requirement on CMakeLists.txt
                 find_package(PCL REQUIRED) --> find_package(PCL 1.8 REQUIRED)
             * I've tried these 3 times until its success...
