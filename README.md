@@ -16,6 +16,19 @@
             sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 80
             sudo update-alternatives --config g++
 
+        Then Compile pcl 1.8.0
+            git clone https://github.com/pointcloudlibrary/pcl
+            git checkout pcl-1.8.0
+            cd pcl
+            mkdir build
+            cd build
+            cmake ..
+            make
+            sudo make install
+
+            Added 1.8 requirement on CMakeLists.txt
+                find_package(PCL REQUIRED) --> find_package(PCL 1.8 REQUIRED)
+            * I've tried these 3 times until its success...
             * special thanks to https://blog.csdn.net/weixin_35762621/article/details/80336291
 
     ## For Debian stretch

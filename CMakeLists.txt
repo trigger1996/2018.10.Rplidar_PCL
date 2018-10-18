@@ -206,7 +206,7 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 find_package(Boost 1.64.0 REQUIRED)
 
 # pcl
-find_package(PCL REQUIRED)
+find_package(PCL 1.8 REQUIRED)
 
 # qt
 find_package(Qt5 COMPONENTS Core Gui Qml Quick REQUIRED)   # 加这个因为Debian使用自带的PCL库(apt-get安装)的时候需要qt
