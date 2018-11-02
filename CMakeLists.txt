@@ -247,7 +247,6 @@ target_link_libraries(main_rplidar_ekf
     ${PCL_LIBRARIES}
 
     iir
-    sliding_integration_f
 )
 
 add_dependencies(main_rplidar_ekf

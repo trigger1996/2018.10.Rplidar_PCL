@@ -45,8 +45,16 @@ PCL坐标系：
 
 #include "include/lidar_driver.h"
 #include "include/registration_icp_ndt.h"
+#include "include/control.hpp"
+#include "iir1/Iir.h"
 
 using namespace std;
+
+double _x_gnd   = 0., _y_gnd   = 0., _z_gnd   = 0.;
+double _x_body  = 0., _y_body  = 0.;
+double _x_blast = 0., _y_blast = 0.;
+double _vx_body = 0., _vy_body = 0.;
+bool is_pose_updated = true;
 
 mavros_msgs::State current_state;
 void state_cb(const mavros_msgs::State::ConstPtr& msg){
@@ -62,6 +70,14 @@ void imuqua_cb(const sensor_msgs::Imu::ConstPtr& msg){
     //Current_euler.z=-Current_euler.z;
     //Current_euler.y=-Current_euler.y;
     Current_acc = msg->linear_acceleration;
+}
+
+
+void local_pos_cb(const geometry_msgs::PoseStamped::ConstPtr& msg){
+    double x = msg->pose.position.x;
+    double y = msg->pose.position.y;
+
+    cout << "[pos_callback] x: \t" << x << " y: \t" << y << "\t x_gnd: \t" << _x_gnd / 100. << " y_gnd: \t" << _y_gnd / 100. << endl;
 }
 
 #include <signal.h>
@@ -91,6 +107,8 @@ void *ros_main_thread(void *arg) {
     ros::ServiceClient set_mode_client = nh.serviceClient<mavros_msgs::SetMode>
             ("mavros/set_mode");
 
+    geometry_msgs::PoseStamped pose;
+
     //the setpoint publishing rate MUST be faster than 2Hz
     ros::Rate rate(100.0);
 
@@ -100,10 +118,11 @@ void *ros_main_thread(void *arg) {
         rate.sleep();
     }
 
-    geometry_msgs::PoseStamped pose;
-    pose.pose.position.x = 0;
-    pose.pose.position.y = 0;
-    pose.pose.position.z = 1;
+    geometry_msgs::PoseStamped vision_pose;
+    vision_pose.pose.position.x = 0;
+    vision_pose.pose.position.y = 0;
+    vision_pose.pose.position.z = 0;
+    static int i = 0;
 
     //send a few setpoints before starting
     for(int i = 100; ros::ok() && i > 0; --i){
@@ -125,23 +144,23 @@ void *ros_main_thread(void *arg) {
     gettimeofday(&t, NULL);
 
     while(ros::ok()){
-        if( current_state.mode != "OFFBOARD" &&
-            (ros::Time::now() - last_request > ros::Duration(5.0))){
-            if( set_mode_client.call(offb_set_mode) &&
-                offb_set_mode.response.mode_sent){
-                ROS_INFO("Offboard enabled");
-            }
-            last_request = ros::Time::now();
-        } else {
-            if( !current_state.armed &&
-                (ros::Time::now() - last_request > ros::Duration(5.0))){
-                if( arming_client.call(arm_cmd) &&
-                    arm_cmd.response.success){
-                    ROS_INFO("Vehicle armed");
-                }
-                last_request = ros::Time::now();
-            }
-        }
+//        if( current_state.mode != "OFFBOARD" &&
+//            (ros::Time::now() - last_request > ros::Duration(5.0))){
+//            if( set_mode_client.call(offb_set_mode) &&
+//                offb_set_mode.response.mode_sent){
+//                ROS_INFO("Offboard enabled");
+//            }
+//            last_request = ros::Time::now();
+//        } else {
+//            if( !current_state.armed &&
+//                (ros::Time::now() - last_request > ros::Duration(5.0))){
+//                if( arming_client.call(arm_cmd) &&
+//                    arm_cmd.response.success){
+//                    ROS_INFO("Vehicle armed");
+//                }
+//                last_request = ros::Time::now();
+//            }
+//        }
 
         // update time
         t_last = t;
@@ -189,6 +208,12 @@ void *ros_main_thread(void *arg) {
 
 //        local_pos_pub.publish(pose);
 
+        if (i % 10 == 0 && is_pose_updated) {
+
+            is_pose_updated = false;
+        }
+
+        i++;
         ros::spinOnce();
         rate.sleep();
 		if (ctrl_c_pressed) {
@@ -214,14 +239,44 @@ int main(int argc, char *argv[]) {
 	
 	__lidar *lidar = new __lidar;
     __registration_abs *reg = new __registration_icp_ndt;
+    __control_pid pos_x_ctrl(0., 0., 0., 5, 10),
+                  pos_y_ctrl(0., 0., 0., 5, 10),
+                  vel_x_ctrl(1., 0., 0., 5, 10),
+                  vel_y_ctrl(1., 0., 0., 5, 10);
 
     static double x = 0., y = 0.;
 
     lidar->init();                  // 构造那边的init会失效
 
+    // for exiting
     signal(SIGINT, ctrlc);
-	
+
+    // IIR
+#define order 4
+    Iir::Butterworth::LowPass<order> iir_vx, iir_vy;
+    const float samplingrate = 12;                            // Hz
+    const float cutoff_frequency = 100;                       // Hz
+    iir_vx.setup(order, samplingrate, cutoff_frequency);
+    iir_vy.setup(order, samplingrate, cutoff_frequency);
+
+    // Timer
+    struct timeval t, t_last;
+    struct timeval tx;          // overall-time
+    gettimeofday(&t, NULL);
+
     while (true) {
+        // update time
+        t_last = t;
+        gettimeofday(&t, NULL);
+        double dt = (t.tv_usec - t_last.tv_usec);
+        if (dt < 0.)
+            dt += 1e6;
+        tx.tv_usec += dt;
+        if (tx.tv_usec >= 1e6) {
+            tx.tv_sec++;
+            tx.tv_usec -= 1e6;
+        }
+
         if (lidar->update_Data()) {
             if(lidar->get_Data().size() && lidar->get_LastData().size()) {
                 vector<__scandot> data, data_last;
@@ -243,9 +298,31 @@ int main(int argc, char *argv[]) {
 				double x_body, y_body, z_body;
 				x_body = x, y_body = y, z_body = 0.;
 				rotate_Grid2Grid(x_body, y_body, z_body, 0, 0, Current_euler.z);
-				
-                cout << "x_body: " << x << " y_body: " << y << endl;      // cm
-				
+
+                /// 全局传参
+                // 地面系位置更新
+                _x_gnd   = -y,      _y_gnd  = x,      _z_gnd = 0.;
+                // 机体系位置更新
+                _x_blast = _x_body, _y_blast = _y_body;
+                _x_body  = x_body,  _y_body = y_body;
+                // 机体系速度更新
+                _vx_body = (x_body - _x_blast) / (dt / 1.e6);
+                _vy_body = (y_body - _y_blast) / (dt / 1.e6);
+                is_pose_updated = true;
+
+                /// 数据预处理
+                _vx_body = iir_vx.filter(_vx_body);
+                _vy_body = iir_vy.filter(_vy_body);
+
+                /// 控制律计算
+                double vx_ctrl = vel_x_ctrl.get_PID(_vx_body, 0.);
+                double vy_ctrl = vel_x_ctrl.get_PID(_vy_body, 0.);
+
+
+                //cout << "x_body: " << x << " y_body: " << y << endl;      // cm
+                cout << "vx: " << vx_ctrl << " \t\t vy: " << vy_ctrl << "\t dt:" << (dt / 1.e6) << endl;
+
+
 				if (ctrl_c_pressed) {
             		break;
         		}
