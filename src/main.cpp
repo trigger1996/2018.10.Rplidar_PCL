@@ -39,6 +39,7 @@ PCL坐标系：
 #include <mavros_msgs/CommandBool.h>
 #include <mavros_msgs/SetMode.h>
 #include <mavros_msgs/State.h>
+#include <mavros_msgs/RCIn.h>
 
 #include <sensor_msgs/Imu.h>
 #include <tf/transform_datatypes.h>
@@ -72,13 +73,31 @@ void imuqua_cb(const sensor_msgs::Imu::ConstPtr& msg){
     Current_acc = msg->linear_acceleration;
 }
 
+typedef struct {
+    uint16_t roll;
+    uint16_t pitch;
+    uint16_t thrust;
+    uint16_t yaw;
+    uint16_t ch_5;
+    uint16_t ch_6;
+    uint16_t ch_7;
+    uint16_t ch_8;
+} __rc_channels;
+__rc_channels rc_in, rc_out;
+void RC_in_cb(const mavros_msgs::RCIn::ConstPtr& msg){
+    rc_in.roll   = msg->channels[0];
+    rc_in.pitch  = msg->channels[1];
+    rc_in.thrust = msg->channels[2];
+    rc_in.yaw    = msg->channels[3];
+    rc_in.ch_5   = msg->channels[4];
+    rc_in.ch_6   = msg->channels[5];
+    rc_in.ch_7   = msg->channels[6];
+    rc_in.ch_8   = msg->channels[7];
 
-void local_pos_cb(const geometry_msgs::PoseStamped::ConstPtr& msg){
-    double x = msg->pose.position.x;
-    double y = msg->pose.position.y;
-
-    cout << "[pos_callback] x: \t" << x << " y: \t" << y << "\t x_gnd: \t" << _x_gnd / 100. << " y_gnd: \t" << _y_gnd / 100. << endl;
+    cout << rc_in.thrust << endl;
+//    cout << 233 << endl;
 }
+
 
 #include <signal.h>
 bool ctrl_c_pressed;
@@ -106,6 +125,9 @@ void *ros_main_thread(void *arg) {
             ("mavros/cmd/arming");
     ros::ServiceClient set_mode_client = nh.serviceClient<mavros_msgs::SetMode>
             ("mavros/set_mode");
+
+    ros::Subscriber rc_in_sub = nh.subscribe<mavros_msgs::RCIn>
+                ("mavros/rc/in", 10, RC_in_cb);
 
     geometry_msgs::PoseStamped pose;
 
@@ -235,27 +257,22 @@ int main(int argc, char *argv[]) {
         printf ("Create pthread error!\n");
         exit (1);
     }
-	
-	
+		
+    // Lidar Driver
 	__lidar *lidar = new __lidar;
+    // ICP_NDT
     __registration_abs *reg = new __registration_icp_ndt;
-    __control_pid pos_x_ctrl(0., 0., 0., 5, 10),
-                  pos_y_ctrl(0., 0., 0., 5, 10),
-                  vel_x_ctrl(1., 0., 0., 5, 10),
-                  vel_y_ctrl(1., 0., 0., 5, 10);
-
-    static double x = 0., y = 0.;
-
-    lidar->init();                  // 构造那边的init会失效
-
-    // for exiting
-    signal(SIGINT, ctrlc);
+    // control
+    __control_pid pos_x_ctrl(0.,  0., 0.,  0.5, 10),
+                  pos_y_ctrl(0.,  0., 0.,  0.5, 10),
+                  vel_x_ctrl(10., 0., 0.5, 50., 10),
+                  vel_y_ctrl(10., 0., 0.5, 50., 10);
 
     // IIR
 #define order 4
     Iir::Butterworth::LowPass<order> iir_vx, iir_vy;
     const float samplingrate = 12;                            // Hz
-    const float cutoff_frequency = 100;                       // Hz
+    const float cutoff_frequency = 150;                       // Hz
     iir_vx.setup(order, samplingrate, cutoff_frequency);
     iir_vy.setup(order, samplingrate, cutoff_frequency);
 
@@ -263,6 +280,13 @@ int main(int argc, char *argv[]) {
     struct timeval t, t_last;
     struct timeval tx;          // overall-time
     gettimeofday(&t, NULL);
+
+    static double x = 0., y = 0.;
+
+    lidar->init();                  // 构造那边的init会失效
+
+    // for exiting
+    signal(SIGINT, ctrlc);
 
     while (true) {
         // update time
@@ -316,11 +340,11 @@ int main(int argc, char *argv[]) {
 
                 /// 控制律计算
                 double vx_ctrl = vel_x_ctrl.get_PID(_vx_body, 0.);
-                double vy_ctrl = vel_x_ctrl.get_PID(_vy_body, 0.);
+                double vy_ctrl = vel_y_ctrl.get_PID(_vy_body, 0.);
 
 
                 //cout << "x_body: " << x << " y_body: " << y << endl;      // cm
-                cout << "vx: " << vx_ctrl << " \t\t vy: " << vy_ctrl << "\t dt:" << (dt / 1.e6) << endl;
+                //cout << "vx: " << vx_ctrl << " \t\t vy: " << vy_ctrl << "\t dt:" << (dt / 1.e6) << endl;
 
 
 				if (ctrl_c_pressed) {
