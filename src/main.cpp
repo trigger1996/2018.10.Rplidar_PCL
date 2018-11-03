@@ -40,6 +40,7 @@ PCL坐标系：
 #include <mavros_msgs/SetMode.h>
 #include <mavros_msgs/State.h>
 #include <mavros_msgs/RCIn.h>
+#include <mavros_msgs/OverrideRCIn.h>
 
 #include <sensor_msgs/Imu.h>
 #include <tf/transform_datatypes.h>
@@ -84,6 +85,7 @@ typedef struct {
     uint16_t ch_8;
 } __rc_channels;
 __rc_channels rc_in, rc_out;
+bool is_rc_updated = false, is_ctrl_rc_updated = false;
 void RC_in_cb(const mavros_msgs::RCIn::ConstPtr& msg){
     rc_in.roll   = msg->channels[0];
     rc_in.pitch  = msg->channels[1];
@@ -94,8 +96,8 @@ void RC_in_cb(const mavros_msgs::RCIn::ConstPtr& msg){
     rc_in.ch_7   = msg->channels[6];
     rc_in.ch_8   = msg->channels[7];
 
-    cout << rc_in.thrust << endl;
-//    cout << 233 << endl;
+    is_rc_updated = true;
+//    cout << rc_in.thrust << endl;
 }
 
 
@@ -128,6 +130,9 @@ void *ros_main_thread(void *arg) {
 
     ros::Subscriber rc_in_sub = nh.subscribe<mavros_msgs::RCIn>
                 ("mavros/rc/in", 10, RC_in_cb);
+    ros::Publisher  rc_adjusted_pub = nh.advertise<mavros_msgs::OverrideRCIn>
+            ("mavros/rc/override", 10);
+    mavros_msgs::OverrideRCIn rc_adjusted;
 
     geometry_msgs::PoseStamped pose;
 
@@ -230,8 +235,20 @@ void *ros_main_thread(void *arg) {
 
 //        local_pos_pub.publish(pose);
 
-        if (i % 10 == 0 && is_pose_updated) {
+        if (is_ctrl_rc_updated) {
+            rc_adjusted.channels[0] = (int16_t)rc_out.roll;
+            rc_adjusted.channels[1] = (int16_t)rc_out.pitch;
+            rc_adjusted.channels[2] = (int16_t)rc_out.thrust;
+            rc_adjusted.channels[3] = (int16_t)rc_out.yaw;
+            rc_adjusted.channels[4] = (int16_t)rc_out.ch_5;
+            rc_adjusted.channels[5] = (int16_t)rc_out.ch_6;
+            rc_adjusted.channels[6] = (int16_t)rc_out.ch_7;
+            rc_adjusted.channels[7] = (int16_t)rc_out.ch_8;
+            rc_adjusted_pub.publish(rc_adjusted);
+            is_ctrl_rc_updated = false;
+        }
 
+        if (i % 10 == 0 && is_pose_updated) {
             is_pose_updated = false;
         }
 
@@ -263,13 +280,13 @@ int main(int argc, char *argv[]) {
     // ICP_NDT
     __registration_abs *reg = new __registration_icp_ndt;
     // control
-    __control_pid pos_x_ctrl(0.,  0., 0.,  0.5, 10),
-                  pos_y_ctrl(0.,  0., 0.,  0.5, 10),
-                  vel_x_ctrl(10., 0., 0.5, 50., 10),
-                  vel_y_ctrl(10., 0., 0.5, 50., 10);
+    __control_pid pos_x_ctrl(0., 0., 0.,  0.5, 10),
+                  pos_y_ctrl(0., 0., 0.,  0.5, 10),
+                  vel_x_ctrl(1., 0., 0.5, 50., 10),
+                  vel_y_ctrl(1., 0., 0.5, 50., 10);
 
     // IIR
-#define order 4
+#define order 6
     Iir::Butterworth::LowPass<order> iir_vx, iir_vy;
     const float samplingrate = 12;                            // Hz
     const float cutoff_frequency = 150;                       // Hz
@@ -316,7 +333,7 @@ int main(int argc, char *argv[]) {
                 reg->set_Ref_PointCloud(data);
                 reg->update();
 
-                x += reg->get_dx();
+                x += reg->get_dx();                                         // cm
                 y += reg->get_dy();
 
 				double x_body, y_body, z_body;
@@ -334,18 +351,36 @@ int main(int argc, char *argv[]) {
                 _vy_body = (y_body - _y_blast) / (dt / 1.e6);
                 is_pose_updated = true;
 
-                /// 数据预处理
-                _vx_body = iir_vx.filter(_vx_body);
-                _vy_body = iir_vy.filter(_vy_body);
+                /// RC数据更新
+                if (is_rc_updated) {
+                    double exp_x = ((double)rc_in.pitch - 1500) / 500 * 150;        // 遥控器行程: 500 150cm/s->1.5m/s
+                    double exp_y = ((double)rc_in.roll  - 1500) / 500 * 150;
 
-                /// 控制律计算
-                double vx_ctrl = vel_x_ctrl.get_PID(_vx_body, 0.);
-                double vy_ctrl = vel_y_ctrl.get_PID(_vy_body, 0.);
+                    /// 数据预处理
+                    _vx_body = iir_vx.filter(_vx_body);
+                    _vy_body = iir_vy.filter(_vy_body);
 
+                    /// 控制律计算
+                    double vx_ctrl = vel_x_ctrl.get_PID(_vx_body, exp_x);
+                    double vy_ctrl = vel_y_ctrl.get_PID(_vy_body, exp_y);
 
-                //cout << "x_body: " << x << " y_body: " << y << endl;      // cm
-                //cout << "vx: " << vx_ctrl << " \t\t vy: " << vy_ctrl << "\t dt:" << (dt / 1.e6) << endl;
+                    vx_ctrl =  -vx_ctrl + 1500;
+                    vy_ctrl =   vy_ctrl + 1500;
 
+                    rc_out.roll   = vy_ctrl;
+                    rc_out.pitch  = vx_ctrl;
+                    rc_out.thrust = rc_in.thrust;
+                    rc_out.yaw    = rc_in.yaw;
+                    rc_out.ch_5   = rc_in.ch_5;
+                    rc_out.ch_6   = rc_in.ch_6;
+                    rc_out.ch_7   = rc_in.ch_7;
+                    rc_out.ch_8   = rc_in.ch_8;
+
+                    is_rc_updated = false;
+                    is_ctrl_rc_updated = true;
+                    cout << "vx: " << vx_ctrl << " \t\t vy: " << vy_ctrl << "\t dt:" << (dt / 1.e6) << endl;
+                }
+                //cout << "x_body: " << x << " y_body: " << y << endl;
 
 				if (ctrl_c_pressed) {
             		break;
