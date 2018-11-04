@@ -1,0 +1,57 @@
+cmake_minimum_required(VERSION 2.8.3)
+
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+	set(CMAKE_BUILD_TYPE "Release")
+endif()
+
+set(IIR_DIR
+  src/iir1/iir
+)
+
+set(IIR_LIBSRC
+  ${IIR_DIR}/Bessel.cpp
+  ${IIR_DIR}/Biquad.cpp
+  ${IIR_DIR}/Butterworth.cpp
+  ${IIR_DIR}/Cascade.cpp
+  ${IIR_DIR}/ChebyshevI.cpp
+  ${IIR_DIR}/ChebyshevII.cpp
+  ${IIR_DIR}/Custom.cpp
+  ${IIR_DIR}/Elliptic.cpp
+  ${IIR_DIR}/Legendre.cpp
+  ${IIR_DIR}/PoleFilter.cpp
+  ${IIR_DIR}/RBJ.cpp
+  ${IIR_DIR}/RootFinder.cpp
+  ${IIR_DIR}/State.cpp
+)
+
+set(IIR_LIBINCLUDE
+  ${IIR_DIR}/Bessel.h
+  ${IIR_DIR}/Biquad.h
+  ${IIR_DIR}/Butterworth.h
+  ${IIR_DIR}/Cascade.h
+  ${IIR_DIR}/ChebyshevI.h
+  ${IIR_DIR}/ChebyshevII.h
+  ${IIR_DIR}/Common.h
+  ${IIR_DIR}/Custom.h
+  ${IIR_DIR}/Elliptic.h
+  ${IIR_DIR}/Layout.h
+  ${IIR_DIR}/Legendre.h
+  ${IIR_DIR}/MathSupplement.h
+  ${IIR_DIR}/PoleFilter.h
+  ${IIR_DIR}/RBJ.h
+  ${IIR_DIR}/RootFinder.h
+  ${IIR_DIR}/State.h
+  ${IIR_DIR}/Types.h
+  ${IIR_DIR}/Utilities.h
+)
+
+add_library(iir
+  SHARED
+  ${IIR_LIBSRC}
+)
+
+set_target_properties(iir PROPERTIES
+# VERSION ${PROJECT_VERSION}
+  PUBLIC_HEADER Iir.h
+  PRIVATE_HEADER "${IIR_LIBINCLUDE}")
+
