@@ -6,6 +6,9 @@
  *  sudo chmod 777 /dev/ttyS1
  *  sudo chmod 777 /dev/ttyUSB0
  *
+ *      these can be added to /etc/rc.local
+ *      https://www.linuxidc.com/Linux/2017-09/147166.htm
+ *
  * About CPU Lock:
  *  http://blog.jobbole.com/107334/
  */
@@ -23,7 +26,7 @@ int main(int argc, char *argv[]) {
 
     int cpu_num = 0;
     cpu_num  = (int)sysconf(_SC_NPROCESSORS_CONF);  // get_cpu_count
-    if (cpu_num < 2) {
+    if (cpu_num < 4) {
         cout << "cpu core num demand not reached!" << endl;
         exit(-1);
     }
@@ -56,7 +59,7 @@ int main(int argc, char *argv[]) {
 void *ros_main_thread(void *arg) {
     cpu_set_t mask, get;
     CPU_ZERO(&mask);
-    CPU_SET(1, &mask);
+    CPU_SET(2, &mask);
     if (pthread_setaffinity_np(pthread_self(), sizeof(mask), &mask) < 0) {
         fprintf(stderr, "set thread affinity failed\n");
     }
@@ -73,7 +76,7 @@ void *ros_main_thread(void *arg) {
 void *rplidar_main_thread(void *arg) {
     cpu_set_t mask, get;
     CPU_ZERO(&mask);
-    CPU_SET(2, &mask);
+    CPU_SET(3, &mask);
     if (pthread_setaffinity_np(pthread_self(), sizeof(mask), &mask) < 0) {
         fprintf(stderr, "set thread affinity failed\n");
     }

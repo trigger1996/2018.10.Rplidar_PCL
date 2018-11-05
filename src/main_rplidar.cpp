@@ -118,7 +118,7 @@ int main_rplidar(int argc, char *argv[]) {
                     is_ctrl_rc_updated = true;
                     //cout << "vx: " << vx_ctrl << " \t\t vy: " << vy_ctrl << "\t dt:" << (dt / 1.e6) << endl;
                 }
-                //cout << "x_body: " << x_body << " y_body: " << y_body << endl;
+                cout << "x_body: " << x_body << " y_body: " << y_body << endl;
             }
         }
 

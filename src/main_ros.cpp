@@ -86,7 +86,7 @@ int main_ros(int argc, char *argv[]) {
                 rc_override.channels[6] = rc_in.ch_7;
                 rc_override.channels[7] = rc_in.ch_8;
 
-                cout << rc_override.channels[0] << endl;
+                //cout << rc_override.channels[0] << endl;
             }
             else {
                 rc_override.channels[0] = rc_in.roll;
