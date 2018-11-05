@@ -71,8 +71,8 @@ int main_rplidar(int argc, char *argv[]) {
                 data = lidar->get_Data();
 
                 /// 数据预处理
-                laser_imu_fusion(data, Current_euler.x, Current_euler.y, Current_euler.z);// 利用飞控测得地磁偏航角锁定激光雷达的旋转，尝试获得更高的精度
-                laser_imu_fusion(data_last, Current_euler.x, Current_euler.y, Current_euler.z);
+                laser_imu_fusion(data, Current_euler.x, Current_euler.y, 90 * M_PI / 180. + Current_euler.z);// 利用飞控测得地磁偏航角锁定激光雷达的旋转，尝试获得更高的精度
+                laser_imu_fusion(data_last, Current_euler.x, Current_euler.y, 90 * M_PI / 180. + Current_euler.z);
 
                 /// 点云配准
                 reg->set_Src_PointCloud(data_last);
