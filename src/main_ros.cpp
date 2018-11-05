@@ -5,7 +5,6 @@
  * @brief Offboard control example node, written with MAVROS version 0.19.x, PX4 Pro Flight
  * Stack and tested in Gazebo SITL
  */
-
 mavros_msgs::State current_state;
 void state_cb(const mavros_msgs::State::ConstPtr& msg){
     current_state = *msg;
@@ -25,11 +24,11 @@ void imuqua_cb(const sensor_msgs::Imu::ConstPtr& msg){
 }
 
 __rc_channels rc_in, rc_out;
-bool is_rc_updated = false, is_ctrl_rc_updated = false;
+bool is_rc_updated = false;
 void RC_in_cb(const mavros_msgs::RCIn::ConstPtr& msg){
     rc_in.roll   = msg->channels[0];
     rc_in.pitch  = msg->channels[1];
-    rc_in.thrust = msg->channels[2];
+    rc_in.thurst = msg->channels[2];
     rc_in.yaw    = msg->channels[3];
     rc_in.ch_5   = msg->channels[4];
     rc_in.ch_6   = msg->channels[5];
@@ -37,11 +36,11 @@ void RC_in_cb(const mavros_msgs::RCIn::ConstPtr& msg){
     rc_in.ch_8   = msg->channels[7];
 
     is_rc_updated = true;
-    //cout << rc_in.thrust << endl;
+    //cout << rc_in.thurst << endl;
 }
 
-int main_ros(int argc, char *argv[])
-{
+static bool is_use_lidar = false;
+int main_ros(int argc, char *argv[]) {
     ros::init(argc, argv, "mavros_rplidar_pid");
     ros::NodeHandle nh;
 
@@ -50,14 +49,16 @@ int main_ros(int argc, char *argv[])
 
 
     ros::Subscriber imuqua_sub = nh.subscribe<sensor_msgs::Imu>
-                ("mavros/imu/data", 10, imuqua_cb);
+                ("mavros/imu/data", 50, imuqua_cb);
     ros::Subscriber rc_in_sub = nh.subscribe<mavros_msgs::RCIn>
-                ("mavros/rc/in", 10, RC_in_cb);
+                ("mavros/rc/in", 400, RC_in_cb);
     ros::Publisher  rc_adjusted_pub = nh.advertise<mavros_msgs::OverrideRCIn>
-            ("mavros/rc/override", 10);
+            ("mavros/rc/override", 400);
+
+    mavros_msgs::OverrideRCIn rc_override;
 
     //the setpoint publishing rate MUST be faster than 2Hz
-    ros::Rate rate(100.0);       // 20.0
+    ros::Rate rate(400.0);       // 20.0
 
     // wait for FCU connection
     while(ros::ok() && !current_state.connected){
@@ -68,9 +69,41 @@ int main_ros(int argc, char *argv[])
     ros::Time last_request = ros::Time::now();
 
     while(ros::ok()){
-        if (is_rc_updated) {
 
+        if (rc_in.ch_8 > 1500)
+            is_use_lidar = true;
+        else
+            is_use_lidar = false;
+
+        if (is_ctrl_rc_updated) {
+            if (is_use_lidar) {
+                rc_override.channels[0] = rc_out.roll;
+                rc_override.channels[1] = rc_out.pitch;
+                rc_override.channels[2] = rc_in.thurst; // rc_out.thurst
+                rc_override.channels[3] = rc_in.yaw;
+                rc_override.channels[4] = rc_in.ch_5;
+                rc_override.channels[5] = rc_in.ch_6;
+                rc_override.channels[6] = rc_in.ch_7;
+                rc_override.channels[7] = rc_in.ch_8;
+
+                cout << rc_override.channels[0] << endl;
+            }
+            else {
+                rc_override.channels[0] = rc_in.roll;
+                rc_override.channels[1] = rc_in.pitch;
+                rc_override.channels[2] = rc_in.thurst;
+                rc_override.channels[3] = rc_in.yaw;
+                rc_override.channels[4] = rc_in.ch_5;
+                rc_override.channels[5] = rc_in.ch_6;
+                rc_override.channels[6] = rc_in.ch_7;
+                rc_override.channels[7] = rc_in.ch_8;
+
+            }
+
+            is_ctrl_rc_updated = false;
         }
+
+        rc_adjusted_pub.publish(rc_override);
 
         last_request = ros::Time::now();
         ros::spinOnce();

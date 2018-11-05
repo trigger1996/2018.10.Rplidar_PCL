@@ -25,7 +25,7 @@ int main_rplidar(int argc, char *argv[]) {
     // Lidar Driver
     __lidar *lidar = new __lidar;
     // ICP_NDT
-    __registration_abs *reg = new __registration_icp_ndt;
+    __registration_abs *reg = new __registration_icp_ndt(false);
     // control
     __control_pid pos_x_ctrl(0., 0., 0.,  0.5, 10),
                   pos_y_ctrl(0., 0., 0.,  0.5, 10),
@@ -91,6 +91,8 @@ int main_rplidar(int argc, char *argv[]) {
                 vx_body = iir_vx.filter(vx_body);
                 vy_body = iir_vy.filter(vy_body);
 
+                is_pose_updated = true;
+
                 // 若RC数据更新
                 if (is_rc_updated) {
                     double exp_x = ((double)rc_in.pitch - 1500) / 500 * 150;        // 遥控器行程: 500 150cm/s->1.5m/s
@@ -105,7 +107,7 @@ int main_rplidar(int argc, char *argv[]) {
 
                     rc_out.roll   = vy_ctrl;
                     rc_out.pitch  = vx_ctrl;
-                    rc_out.thrust = rc_in.thrust;
+                    rc_out.thurst = rc_in.thurst;
                     rc_out.yaw    = rc_in.yaw;
                     rc_out.ch_5   = rc_in.ch_5;
                     rc_out.ch_6   = rc_in.ch_6;
@@ -114,7 +116,7 @@ int main_rplidar(int argc, char *argv[]) {
 
                     is_rc_updated = false;
                     is_ctrl_rc_updated = true;
-                    cout << "vx: " << vx_ctrl << " \t\t vy: " << vy_ctrl << "\t dt:" << (dt / 1.e6) << endl;
+                    //cout << "vx: " << vx_ctrl << " \t\t vy: " << vy_ctrl << "\t dt:" << (dt / 1.e6) << endl;
                 }
                 //cout << "x_body: " << x_body << " y_body: " << y_body << endl;
             }

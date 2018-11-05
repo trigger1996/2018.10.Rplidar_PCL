@@ -51,7 +51,7 @@ typedef struct {
 typedef struct {
     uint16_t roll;
     uint16_t pitch;
-    uint16_t thrust;
+    uint16_t thurst;
     uint16_t yaw;
     uint16_t ch_5;
     uint16_t ch_6;

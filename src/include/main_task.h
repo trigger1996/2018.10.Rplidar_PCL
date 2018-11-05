@@ -10,7 +10,14 @@
 #include <cmath>
 #include <algorithm>
 
-#include <unistd.h>
+#include<sys/types.h>
+#include<sys/sysinfo.h>
+#include<unistd.h>
+//#define _GNU_SOURCE
+#include<sched.h>
+#include<ctype.h>
+#include<pthread.h>
+
 #include "config.h"
 
 #include <ros/ros.h>
@@ -36,7 +43,7 @@ extern mavros_msgs::State current_state;
 extern geometry_msgs::Vector3 Current_euler;
 extern geometry_msgs::Vector3 Current_acc;
 extern __rc_channels rc_in, rc_out;
-extern bool is_rc_updated, is_ctrl_rc_updated;
+extern bool is_rc_updated;
 
 // main_rplidar
 extern double x_gnd,           y_gnd;

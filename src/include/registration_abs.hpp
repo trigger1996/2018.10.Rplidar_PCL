@@ -103,9 +103,10 @@ public:
         cloud           = _cloud;
         cloud_last      = _cloud_last;
         cloud_converged = _cloud_converged;
-        boost::shared_ptr<pcl::visualization::PCLVisualizer> _viewer(new pcl::visualization::PCLVisualizer(viewer_name));
-        viewer = _viewer;
-
+        if (is_show) {
+            boost::shared_ptr<pcl::visualization::PCLVisualizer> _viewer(new pcl::visualization::PCLVisualizer(viewer_name));
+            viewer = _viewer;
+        }
         transMat = new Matrix4f;
         transMat->setZero(4, 4);
 
