@@ -46,19 +46,20 @@ int main_ros(int argc, char *argv[]) {
 
     ros::Subscriber state_sub = nh.subscribe<mavros_msgs::State>
             ("mavros/state", 10, state_cb);
-
-
     ros::Subscriber imuqua_sub = nh.subscribe<sensor_msgs::Imu>
                 ("mavros/imu/data", 50, imuqua_cb);
     ros::Subscriber rc_in_sub = nh.subscribe<mavros_msgs::RCIn>
-                ("mavros/rc/in", 400, RC_in_cb);
+                ("mavros/rc/in", 100, RC_in_cb);
     ros::Publisher  rc_adjusted_pub = nh.advertise<mavros_msgs::OverrideRCIn>
-            ("mavros/rc/override", 400);
+            ("mavros/rc/override", 200);
+//    ros::Publisher att_ctrl_xy_pub = nh.advertise<geometry_msgs::PoseStamped>("mavros/setpoint_attitude/attitude", 100);
+//    ros::Publisher att_ctrl_z_pub  = nh.advertise<std_msgs::Float64>("mavros/setpoint_attitude/att_throttle", 100);
 
     mavros_msgs::OverrideRCIn rc_override;
+    geometry_msgs::PoseStamped cmd_attr;
 
     //the setpoint publishing rate MUST be faster than 2Hz
-    ros::Rate rate(400.0);       // 20.0
+    ros::Rate rate(100.0);       // 20.0
 
     // wait for FCU connection
     while(ros::ok() && !current_state.connected){

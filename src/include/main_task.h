@@ -30,6 +30,8 @@
 #include <mavros_msgs/RCIn.h>
 #include <mavros_msgs/OverrideRCIn.h>
 
+#include <std_msgs/Float64.h>
+
 #include <sensor_msgs/Imu.h>
 #include <tf/transform_datatypes.h>
 

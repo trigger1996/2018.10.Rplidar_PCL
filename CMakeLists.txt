@@ -207,7 +207,12 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 find_package(Boost 1.64.0 REQUIRED)
 
 # pcl
-find_package(PCL REQUIRED)
+find_package(PCL REQUIRED
+    common
+    filters
+    registration
+    visualization
+)
 
 set(PCL_INCLUDE_DIRS /usr/local/include/pcl-1.8)
 

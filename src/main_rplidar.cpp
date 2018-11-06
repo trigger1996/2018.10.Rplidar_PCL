@@ -71,8 +71,8 @@ int main_rplidar(int argc, char *argv[]) {
                 data = lidar->get_Data();
 
                 /// 数据预处理
-                laser_imu_fusion(data, Current_euler.x, Current_euler.y, 90 * M_PI / 180. + Current_euler.z);// 利用飞控测得地磁偏航角锁定激光雷达的旋转，尝试获得更高的精度
-                laser_imu_fusion(data_last, Current_euler.x, Current_euler.y, 90 * M_PI / 180. + Current_euler.z);
+                laser_imu_fusion(data, Current_euler.x, Current_euler.y, 90 * M_PI / 180. + Current_euler.z);       // 利用飞控测得地磁偏航角锁定激光雷达的旋转，尝试获得更高的精度
+                laser_imu_fusion(data_last, Current_euler.x, Current_euler.y, 90 * M_PI / 180. + Current_euler.z);  // z旋转角 = 雷达安装角 + 飞机偏航角
 
                 /// 点云配准
                 reg->set_Src_PointCloud(data_last);
@@ -118,9 +118,10 @@ int main_rplidar(int argc, char *argv[]) {
                     is_ctrl_rc_updated = true;
                     //cout << "vx: " << vx_ctrl << " \t\t vy: " << vy_ctrl << "\t dt:" << (dt / 1.e6) << endl;
                 }
-                cout << "x_body: " << x_body << " y_body: " << y_body << endl;
+                //cout << "x_body: " << x_body << " y_body: " << x_body << "\t\t dt:" << (dt / 1.e6) << endl;
             }
         }
+        cout << "dt:" << (dt / 1.e6) << y_body << endl;
 
         if (ctrl_c_pressed) {
             break;

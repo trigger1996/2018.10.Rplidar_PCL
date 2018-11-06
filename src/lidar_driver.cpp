@@ -106,7 +106,7 @@ __lidar_error_list __lidar::init() {
     drv->startMotor();
     // start scan...
     //drv->startScan(0,1);
-    drv->startScanExpress(0, RPLIDAR_CONF_SCAN_COMMAND_HQ);
+    drv->startScanExpress(0, RPLIDAR_CONF_SCAN_COMMAND_HQ);     // RPLIDAR_CONF_SCAN_COMMAND_EXPRESS
 
     return __success;
 }
