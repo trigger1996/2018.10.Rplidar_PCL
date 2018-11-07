@@ -50,6 +50,7 @@ protected:
     Matrix4f *icpTransMat;
 
     pcl::StatisticalOutlierRemoval<pcl::PointXYZ>::Ptr sor;                          // 创建滤波器对象
+    pcl::VoxelGrid<pcl::PointXYZ>::Ptr vox;
     pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ>::Ptr icp;               // 创建ICP对象，用于ICP配准
     pcl::NormalDistributionsTransform<pcl::PointXYZ, pcl::PointXYZ>::Ptr ndt;        // 创建正态分布变换（NDT）
 };

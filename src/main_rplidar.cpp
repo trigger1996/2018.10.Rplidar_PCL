@@ -118,10 +118,10 @@ int main_rplidar(int argc, char *argv[]) {
                     is_ctrl_rc_updated = true;
                     //cout << "vx: " << vx_ctrl << " \t\t vy: " << vy_ctrl << "\t dt:" << (dt / 1.e6) << endl;
                 }
-                //cout << "x_body: " << x_body << " y_body: " << x_body << "\t\t dt:" << (dt / 1.e6) << endl;
+                cout << "x_body: " << x_body << " y_body: " << y_body << "\t\t dt:" << (dt / 1.e6) << endl;
             }
         }
-        cout << "dt:" << (dt / 1.e6) << y_body << endl;
+        //cout << "dt:" << (dt / 1.e6) << y_body << endl;
 
         if (ctrl_c_pressed) {
             break;

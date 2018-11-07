@@ -9,12 +9,16 @@
 #include <pcl-1.8/pcl/point_cloud.h>
 #include <pcl-1.8/pcl/visualization/cloud_viewer.h>
 #include <pcl-1.8/pcl/filters/statistical_outlier_removal.h>
+#include <pcl-1.8/pcl/filters/voxel_grid.h>
+#include <pcl-1.8/pcl/filters/approximate_voxel_grid.h>
 #include <pcl-1.8/pcl/registration/registration.h>
 #include <pcl-1.8/pcl/registration/icp.h>
 #include <pcl-1.8/pcl/registration/ndt.h>
 
 using namespace std;
 using namespace Eigen;
+
+#define Z_Const_Val 1.      // 使用1是为了防止奇异值
 
 class __registration_abs {
 public:
@@ -56,7 +60,7 @@ public:
         cloud_last->points.resize(in.size());
         for (size_t i = 0; i < in.size(); i++) {
             double x, y, z;
-            Cylindrical_2_Cartesian(in[i].dst, in[i].angle, 0., x, y, z);
+            Cylindrical_2_Cartesian(in[i].dst, in[i].angle, Z_Const_Val, x, y, z);
             cloud_last->points[i].x = x / 10.;
             cloud_last->points[i].y = y / 10.;
             cloud_last->points[i].z = z / 10.;
@@ -80,7 +84,7 @@ public:
         cloud->points.resize(in.size());
         for (size_t i = 0; i < in.size(); i++) {
             double x, y, z;
-            Cylindrical_2_Cartesian(in[i].dst, in[i].angle, 0., x, y, z);
+            Cylindrical_2_Cartesian(in[i].dst, in[i].angle, Z_Const_Val, x, y, z);
             cloud->points[i].x = x / 10.;
             cloud->points[i].y = y / 10.;
             cloud->points[i].z = z / 10.;
