@@ -27,10 +27,10 @@ int main_rplidar(int argc, char *argv[]) {
     // ICP_NDT
     __registration_abs *reg = new __registration_icp_ndt(false);
     // control
-    __control_pid pos_x_ctrl(0., 0., 0.,  0.5, 10),
-                  pos_y_ctrl(0., 0., 0.,  0.5, 10),
-                  vel_x_ctrl(1., 0., 0.5, 50., 10),
-                  vel_y_ctrl(1., 0., 0.5, 50., 10);
+    __control_pid pos_x_ctrl(0.,  0., 0.,  0.5, 10),
+                  pos_y_ctrl(0.,  0., 0.,  0.5, 10),
+                  vel_x_ctrl(3.5, 0., 0.001, 50., 10),
+                  vel_y_ctrl(3.5, 0., 0.001, 50., 10);
 
     // IIR
     const int order = 6;
@@ -71,8 +71,8 @@ int main_rplidar(int argc, char *argv[]) {
                 data = lidar->get_Data();
 
                 /// 数据预处理
-                laser_imu_fusion(data, Current_euler.x, Current_euler.y, 90 * M_PI / 180. + Current_euler.z);       // 利用飞控测得地磁偏航角锁定激光雷达的旋转，尝试获得更高的精度
-                laser_imu_fusion(data_last, Current_euler.x, Current_euler.y, 90 * M_PI / 180. + Current_euler.z);  // z旋转角 = 雷达安装角 + 飞机偏航角
+                laser_imu_fusion(data, Current_euler.x, Current_euler.y, 0. * M_PI / 180. + Current_euler.z);       // 利用飞控测得地磁偏航角锁定激光雷达的旋转，尝试获得更高的精度
+                laser_imu_fusion(data_last, Current_euler.x, Current_euler.y, 0. * M_PI / 180. + Current_euler.z);  // z旋转角 = 雷达安装角 + 飞机偏航角
 
                 /// 点云配准
                 reg->set_Src_PointCloud(data_last);
@@ -95,12 +95,42 @@ int main_rplidar(int argc, char *argv[]) {
 
                 // 若RC数据更新
                 if (is_rc_updated) {
-                    double exp_x = ((double)rc_in.pitch - 1500) / 500 * 150;        // 遥控器行程: 500 150cm/s->1.5m/s
-                    double exp_y = ((double)rc_in.roll  - 1500) / 500 * 150;
+                    double rc_exp_x = (double)rc_in.pitch;
+                    double rc_exp_y = (double)rc_in.roll;
+                    if (rc_exp_x == 0)
+                        rc_exp_x = 1500;
+                    else if (rc_exp_x < 1000)
+                        rc_exp_x = 1000;
+                    else if (rc_exp_x > 2000)
+                        rc_exp_x = 2000;
+                    if (rc_exp_y == 0)
+                        rc_exp_y = 1500;
+                    else if (rc_exp_y < 1000)
+                        rc_exp_y = 1000;
+                    else if (rc_exp_y > 2000)
+                        rc_exp_y = 2000;
+                    double exp_x = (rc_exp_x - 1500) / 500 * 150;        // 遥控器行程: 500 150cm/s->1.5m/s
+                    double exp_y = (rc_exp_y - 1500) / 500 * 150;
 
                     /// 控制律计算
-                    double vx_ctrl = vel_x_ctrl.get_PID(vx_body, exp_x);
-                    double vy_ctrl = vel_y_ctrl.get_PID(vy_body, exp_y);
+                    double vx_data_in = 0., vy_data_in = 0.;
+                    if (fabs(vx_body) < 15.)
+                        if (vx_body >= 0.)
+                            vx_data_in = sqrt(fabs(vx_body));
+                        else
+                            vx_data_in = -sqrt(fabs(vx_body));
+                    else
+                        vx_data_in = vx_body;
+                    if (fabs(vy_body < 15.))
+                        if (vy_body >= 0.)
+                            vy_data_in = sqrt(fabs(vy_body));
+                        else
+                            vy_data_in = -sqrt(fabs(vy_body));
+                    else
+                        vy_data_in = vy_body;
+
+                    double vx_ctrl = vel_x_ctrl.get_PID(vx_data_in, exp_x);
+                    double vy_ctrl = vel_y_ctrl.get_PID(vy_data_in, exp_y);
 
                     vx_ctrl =  -vx_ctrl + 1500;
                     vy_ctrl =   vy_ctrl + 1500;
@@ -116,9 +146,10 @@ int main_rplidar(int argc, char *argv[]) {
 
                     is_rc_updated = false;
                     is_ctrl_rc_updated = true;
-                    //cout << "vx: " << vx_ctrl << " \t\t vy: " << vy_ctrl << "\t dt:" << (dt / 1.e6) << endl;
+                    cout << "vx_body: " << vx_data_in << "\t vy_body: " << vy_data_in << endl;
+                    cout << "vx: " << vx_ctrl << " \t\t vy: " << vy_ctrl << "\t dt:" << (dt / 1.e6) << endl;
                 }
-                cout << "x_body: " << x_body << " y_body: " << y_body << "\t\t dt:" << (dt / 1.e6) << endl;
+                //cout << "x_body: " << x_body << " y_body: " << y_body << "\t yaw: " << Current_euler.z << "\t\t dt:" << (dt / 1.e6) << endl;
             }
         }
         //cout << "dt:" << (dt / 1.e6) << y_body << endl;
@@ -143,7 +174,7 @@ void laser_imu_fusion(vector<__scandot> &data, double roll, double pitch, double
         data[i].dst = sqrt(x*x + y*y);
 
         // 做旋转补偿
-        data[i].angle -= Current_euler.z * 180. / M_PI + 90.;
+        data[i].angle -= Current_euler.z * 180. / M_PI;
         while (data[i].angle < 0)
             data[i].angle += 360;
         while (data[i].angle > 360)

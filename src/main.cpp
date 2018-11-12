@@ -66,6 +66,7 @@ void *ros_main_thread(void *arg) {
     CPU_ZERO(&get);
     if (pthread_getaffinity_np(pthread_self(), sizeof(get), &get) < 0) {
         fprintf(stderr, "get thread affinity failed\n");
+        exit(101);
     }
 
     main_ros(_argc, _argv);
@@ -83,6 +84,7 @@ void *rplidar_main_thread(void *arg) {
     CPU_ZERO(&get);
     if (pthread_getaffinity_np(pthread_self(), sizeof(get), &get) < 0) {
         fprintf(stderr, "get thread affinity failed\n");
+        exit(102);
     }
 
     main_rplidar(_argc, _argv);
