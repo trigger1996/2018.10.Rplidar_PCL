@@ -28,11 +28,12 @@
 
 #include <geometry_msgs/Quaternion.h>
 #include <mavros_msgs/RCIn.h>
-#include <mavros_msgs/OverrideRCIn.h>
+#include <mavros_msgs/HilGPS.h>
 
 #include <std_msgs/Float64.h>
 
 #include <sensor_msgs/Imu.h>
+#include <sensor_msgs/Range.h>
 #include <tf/transform_datatypes.h>
 
 using namespace std;

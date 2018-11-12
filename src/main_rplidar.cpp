@@ -94,7 +94,7 @@ int main_rplidar(int argc, char *argv[]) {
                 is_pose_updated = true;
 
                 // 若RC数据更新
-                if (is_rc_updated) {
+                //if (is_rc_updated) {
                     double rc_exp_x = (double)rc_in.pitch;
                     double rc_exp_y = (double)rc_in.roll;
                     if (rc_exp_x == 0)
@@ -146,9 +146,9 @@ int main_rplidar(int argc, char *argv[]) {
 
                     is_rc_updated = false;
                     is_ctrl_rc_updated = true;
-                    cout << "vx_body: " << vx_data_in << "\t vy_body: " << vy_data_in << endl;
-                    cout << "vx: " << vx_ctrl << " \t\t vy: " << vy_ctrl << "\t dt:" << (dt / 1.e6) << endl;
-                }
+                    //cout << "vx_body: " << vx_data_in << "\t vy_body: " << vy_data_in << endl;
+                    //cout << "vx: " << vx_ctrl << " \t\t vy: " << vy_ctrl << "\t dt:" << (dt / 1.e6) << endl;
+                //}
                 //cout << "x_body: " << x_body << " y_body: " << y_body << "\t yaw: " << Current_euler.z << "\t\t dt:" << (dt / 1.e6) << endl;
             }
         }
