@@ -18,5 +18,4 @@
 	</include>
 
     <node name="offboard_rplidar_node" pkg="mavros_rplidar_pid" type="main_rplidar_pid" output="screen"/>
-
 </launch>

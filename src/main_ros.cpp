@@ -2,24 +2,22 @@
 #include "include/ned_2_lat_lon.hpp"
 
 mavros_msgs::State current_state;
-void state_cb(const mavros_msgs::State::ConstPtr& msg){
+void state_cb(const mavros_msgs::State::ConstPtr& msg) {
     current_state = *msg;
 }
 
 sensor_msgs::Imu current_imu_raw;
 geometry_msgs::Vector3 Current_euler;
 geometry_msgs::Vector3 Current_acc;
-void imuqua_cb(const sensor_msgs::Imu::ConstPtr& msg){
+static void imuqua_cb(const sensor_msgs::Imu::ConstPtr& msg) {
     current_imu_raw = *msg;
 
     tf::Quaternion IMU_q(msg->orientation.x,msg->orientation.y,msg->orientation.z,msg->orientation.w);
     tf::Matrix3x3 m(IMU_q);
     m.getRPY(Current_euler.x,Current_euler.y,Current_euler.z);
-    //Current_euler.z=-Current_euler.z;
-    //Current_euler.y=-Current_euler.y;
     Current_acc = msg->linear_acceleration;
 
-    //cout << Current_euler.x << endl;
+    //cout << Current_euler.z << endl;
 }
 
 float px4flow_range = 0.;
@@ -51,29 +49,36 @@ int main_ros(int argc, char *argv[]) {
     ros::NodeHandle nh;
 
     ros::Subscriber state_sub = nh.subscribe<mavros_msgs::State>
-            ("mavros/state", 10, state_cb);
+            ("mavros/state", 20, state_cb);
     ros::Subscriber imuqua_sub = nh.subscribe<sensor_msgs::Imu>
-                ("mavros/imu/data", 100, imuqua_cb);
-    ros::Subscriber rc_in_sub = nh.subscribe<mavros_msgs::RCIn>
-                ("mavros/rc/in", 200, RC_in_cb);
+                ("mavros/imu/data", 20, imuqua_cb);   
+//    ros::Subscriber rc_in_sub = nh.subscribe<mavros_msgs::RCIn>
+//            ("mavros/rc/in", 200, RC_in_cb);
 
-    ros::Subscriber px4flow_sub = nh.subscribe<sensor_msgs::Range>
-            ("mavros/px4flow/ground_distance", 25, px4flow_cb);
-//    ros::Publisher vision_fake_gps_pub = nh.advertise<mavros_msgs::HilGPS>
-//            ("mavros/hil/gps", 8);
-//    ros::Publisher vision_pos_pub = nh.advertise<geometry_msgs::PoseStamped>
-//            ("mavros/vision_pose/pose", 8);
+//    ros::Subscriber px4flow_sub = nh.subscribe<sensor_msgs::Range>
+//            ("mavros/px4flow/ground_distance", 25, px4flow_cb);
+    ros::Publisher vision_pos_pub = nh.advertise<geometry_msgs::PoseStamped>
+            ("mavros/vision_pose/pose", 5);
     ros::Publisher vision_pos_pub_mocap = nh.advertise<geometry_msgs::PoseStamped>
-            ("mavros/fake_gps/mocap/pose", 8);
+            ("mavros/fake_gps/mocap/pose", 5);
 
 //    mavros_msgs::HilGPS fake_gps;
     geometry_msgs::PoseStamped vision_pose;
 
     //the setpoint publishing rate MUST be faster than 2Hz
-    ros::Rate rate(200.0);       // 20.0
+    ros::Rate rate(10.0);       // 20.0
+
+    ros::ServiceClient stream_rate_client = nh.serviceClient<mavros_msgs::StreamRate>
+            ("mavros/set_stream_rate");
+    mavros_msgs::StreamRate stream_rate;
+    stream_rate.request.stream_id = 0;      // STREAN)AKK
+    stream_rate.request.message_rate = 20;
+    stream_rate.request.on_off = true;
+    stream_rate_client.call(stream_rate);
 
     // wait for FCU connection
     while(ros::ok() && !current_state.connected){
+        stream_rate_client.call(stream_rate);
         ros::spinOnce();
         rate.sleep();
     }
@@ -83,33 +88,10 @@ int main_ros(int argc, char *argv[]) {
     while(ros::ok()){
 
         if (is_ctrl_rc_updated) {
-//            fake_gps.header.stamp = ros::Time::now();
-//            fake_gps.fix_type = 3;
-
-//            double lat, lon, alt;
-//            ned_2_lat_lon(-x_gnd  / 100., -y_gnd / 100., px4flow_range,
-//                          lat, lon, alt);
-
-//            fake_gps.geo.longitude = (int32_t)(lon * 1e6);
-//            fake_gps.geo.latitude  = (int32_t)(lat * 1e6);
-//            fake_gps.geo.altitude  = (int32_t)alt / 10000;
-//            fake_gps.eph = 2.;
-//            fake_gps.epv = 2.;
-//            fake_gps.vel = 65535;   // sqrt(vx_body*vx_body + vy_body*vy_body)
-//            fake_gps.vn = 0.;
-//            fake_gps.ve = 0.;
-//            fake_gps.vd = 0.;
-//            fake_gps.cog = 65535;
-//            fake_gps.satellites_visible = 255;
-
-//            //cout << fake_gps.geo.longitude << endl;
-
-//            vision_fake_gps_pub.publish(fake_gps);
-
-            // ENU
+            // Vision
             vision_pose.header.stamp = ros::Time::now();
-            vision_pose.pose.position.x = -x_gnd  / 100.;
-            vision_pose.pose.position.y = -y_gnd / 100.;
+            vision_pose.pose.position.x = -x_gnd / 100.;           //  y_body / 100.
+            vision_pose.pose.position.y =  y_gnd / 100.;           // -x_body / 100.
             vision_pose.pose.position.z = px4flow_range;
             vision_pose.pose.orientation.x = current_imu_raw.orientation.x;
             vision_pose.pose.orientation.y = current_imu_raw.orientation.y;
@@ -117,7 +99,13 @@ int main_ros(int argc, char *argv[]) {
             vision_pose.pose.orientation.w = current_imu_raw.orientation.w;
 
             vision_pos_pub.publish(vision_pose);
+
+            // Fake GPS/ENU
+            vision_pose.pose.position.x = -x_gnd / 100.;            // lat
+            vision_pose.pose.position.y =  y_gnd / 100.;            // lon
             vision_pos_pub_mocap.publish(vision_pose);
+
+            cout << "x_body: " << vision_pose.pose.orientation.x << "\t y_body:: " << vision_pose.pose.orientation.y << endl;
 
             is_ctrl_rc_updated = false;
         }

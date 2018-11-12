@@ -158,8 +158,8 @@ fake_gps:
     lat: 47.3667          # latitude [degrees]
     lon: 8.5500           # longitude [degrees]
     alt: 408.0            # altitude (height over the WGS-84 ellipsoid) [meters]
-  eph: 2.0
-  epv: 2.0
+  eph: 1.25
+  epv: 1.25
   satellites_visible: 5   # virtual number of visible satellites
   fix_type: 3             # type of GPS fix (default: 3D)
   tf:

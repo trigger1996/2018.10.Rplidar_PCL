@@ -10,3 +10,4 @@ src/sdk/src/arch/win32
 src/sdk/src/hal
 src
 .
+yaml

@@ -1,6 +1,6 @@
 plugin_blacklist:
 # common
-- actuator_control
+####- actuator_control
 - ftp
 - safety_area
 ####- hil

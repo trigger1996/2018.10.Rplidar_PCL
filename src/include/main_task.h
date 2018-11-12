@@ -30,6 +30,8 @@
 #include <mavros_msgs/RCIn.h>
 #include <mavros_msgs/HilGPS.h>
 
+#include <mavros_msgs/StreamRate.h>
+
 #include <std_msgs/Float64.h>
 
 #include <sensor_msgs/Imu.h>
