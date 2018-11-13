@@ -20,13 +20,6 @@ static void imuqua_cb(const sensor_msgs::Imu::ConstPtr& msg) {
     //cout << Current_euler.z << endl;
 }
 
-float px4flow_range = 0.;
-void px4flow_cb(const sensor_msgs::Range::ConstPtr& msg){
-    sensor_msgs::Range temp;
-    temp = *msg;
-    px4flow_range = temp.range;
-}
-
 
 __rc_channels rc_in, rc_out;
 bool is_rc_updated = false;
@@ -44,6 +37,12 @@ void RC_in_cb(const mavros_msgs::RCIn::ConstPtr& msg){
     //cout << rc_in.thurst << endl;
 }
 
+double alt_global = 0.;
+void rel_alt_cb(const std_msgs::Float64::ConstPtr& msg) {
+    std_msgs::Float64 temp = *msg;
+    alt_global = temp.data;
+}
+
 int main_ros(int argc, char *argv[]) {
     ros::init(argc, argv, "mavros_rplidar_pid");
     ros::NodeHandle nh;
@@ -55,8 +54,8 @@ int main_ros(int argc, char *argv[]) {
 //    ros::Subscriber rc_in_sub = nh.subscribe<mavros_msgs::RCIn>
 //            ("mavros/rc/in", 200, RC_in_cb);
 
-//    ros::Subscriber px4flow_sub = nh.subscribe<sensor_msgs::Range>
-//            ("mavros/px4flow/ground_distance", 25, px4flow_cb);
+    ros::Subscriber rel_alt_sub = nh.subscribe<std_msgs::Float64>
+            ("mavros/global_position/rel_alt", 20, rel_alt_cb);
     ros::Publisher vision_pos_pub = nh.advertise<geometry_msgs::PoseStamped>
             ("mavros/vision_pose/pose", 5);
     ros::Publisher vision_pos_pub_mocap = nh.advertise<geometry_msgs::PoseStamped>
@@ -90,9 +89,9 @@ int main_ros(int argc, char *argv[]) {
         if (is_ctrl_rc_updated) {
             // Vision
             vision_pose.header.stamp = ros::Time::now();
-            vision_pose.pose.position.x = -x_gnd / 100.;           //  y_body / 100.
-            vision_pose.pose.position.y =  y_gnd / 100.;           // -x_body / 100.
-            vision_pose.pose.position.z = px4flow_range;
+            vision_pose.pose.position.x =  y_gnd / 100.;           //  y_body / 100. //  x_body
+            vision_pose.pose.position.y = -x_gnd / 100.;           // -x_body / 100. // -y_body
+            vision_pose.pose.position.z = alt_global;
             vision_pose.pose.orientation.x = current_imu_raw.orientation.x;
             vision_pose.pose.orientation.y = current_imu_raw.orientation.y;
             vision_pose.pose.orientation.z = current_imu_raw.orientation.z;
@@ -103,9 +102,10 @@ int main_ros(int argc, char *argv[]) {
             // Fake GPS/ENU
             vision_pose.pose.position.x = -x_gnd / 100.;            // lat
             vision_pose.pose.position.y =  y_gnd / 100.;            // lon
-            vision_pos_pub_mocap.publish(vision_pose);
 
-            cout << "x_body: " << vision_pose.pose.orientation.x << "\t y_body:: " << vision_pose.pose.orientation.y << endl;
+            //vision_pos_pub_mocap.publish(vision_pose);
+
+            cout << "x_body: " << vision_pose.pose.position.x << "\t y_body:: " << vision_pose.pose.position.y << endl;
 
             is_ctrl_rc_updated = false;
         }

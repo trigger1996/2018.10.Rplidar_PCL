@@ -25,7 +25,7 @@ int main_rplidar(int argc, char *argv[]) {
     // Lidar Driver
     __lidar *lidar = new __lidar;
     // ICP_NDT
-    __registration_abs *reg = new __registration_icp_ndt(true);
+    __registration_abs *reg = new __registration_icp_ndt(false);
     // control
     __control_pid pos_x_ctrl(0.,  0., 0.,  0.5, 10),
                   pos_y_ctrl(0.,  0., 0.,  0.5, 10),
