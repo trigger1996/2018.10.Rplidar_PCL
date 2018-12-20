@@ -131,6 +131,8 @@ bool __lidar::update_Data() {
             temp.is_start = (nodes[pos].flag & RPLIDAR_RESP_MEASUREMENT_SYNCBIT);
 //            if (!temp.quality)        // 这个加了后面NDT会爆炸
 //                continue;
+            if (temp.dst < dst_cloest)
+                continue;
             data.push_back(temp);
 
 //                printf("%s theta: %03.2f Dist: %08.2f Q: %d \n",

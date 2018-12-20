@@ -53,6 +53,7 @@ protected:
 
     bool is_Healthy();
 
+    double dst_cloest = 200.;   // mm, within this distance, the data is invalid
 };
 
 #endif // LIDAR_DRIVER_CPP

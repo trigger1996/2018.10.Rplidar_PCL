@@ -50,7 +50,7 @@ int main_ros(int argc, char *argv[]) {
     ros::Subscriber state_sub = nh.subscribe<mavros_msgs::State>
             ("mavros/state", 20, state_cb);
     ros::Subscriber imuqua_sub = nh.subscribe<sensor_msgs::Imu>
-                ("mavros/imu/data", 20, imuqua_cb);   
+                ("mavros/imu/data", 20, imuqua_cb);
 //    ros::Subscriber rc_in_sub = nh.subscribe<mavros_msgs::RCIn>
 //            ("mavros/rc/in", 200, RC_in_cb);
 
@@ -89,8 +89,8 @@ int main_ros(int argc, char *argv[]) {
         if (is_ctrl_rc_updated) {
             // Vision
             vision_pose.header.stamp = ros::Time::now();
-            vision_pose.pose.position.x =  y_gnd / 100.;           //  y_body / 100. //  x_body
-            vision_pose.pose.position.y = -x_gnd / 100.;           // -x_body / 100. // -y_body
+            vision_pose.pose.position.x = -x_body / 100.;          //  y_body / 100. //  x_body
+            vision_pose.pose.position.y =  y_body / 100.;          // -x_body / 100. // -y_body
             vision_pose.pose.position.z = alt_global;
             vision_pose.pose.orientation.x = current_imu_raw.orientation.x;
             vision_pose.pose.orientation.y = current_imu_raw.orientation.y;

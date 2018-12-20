@@ -21,11 +21,18 @@ void ctrlc(int) {
     ctrl_c_pressed = true;
 }
 
+
+///
+/// \brief __lidar_install_angle
+///
+static double __lidar_install_angle = 0. * M_PI / 180.;
+
+
 int main_rplidar(int argc, char *argv[]) {
     // Lidar Driver
     __lidar *lidar = new __lidar;
     // ICP_NDT
-    __registration_abs *reg = new __registration_icp_ndt(false);
+    __registration_abs *reg = new __registration_icp_ndt(true);
     // control
     __control_pid pos_x_ctrl(0.,  0., 0.,  0.5, 10),
                   pos_y_ctrl(0.,  0., 0.,  0.5, 10),
@@ -66,13 +73,16 @@ int main_rplidar(int argc, char *argv[]) {
 
         if (lidar->update_Data()) {
             if(lidar->get_Data().size() && lidar->get_LastData().size()) {
-                vector<__scandot> data, data_last;
-                data_last = lidar->get_LastData();
+                static vector<__scandot> data, data_last;
+                //data_last = lidar->get_LastData();
+                //data = lidar->get_Data();
+                data_last = data;
                 data = lidar->get_Data();
 
-                /// 数据预处理
-                laser_imu_fusion(data, Current_euler.x, Current_euler.y, 90. * M_PI / 180. - Current_euler.z);       // 利用飞控测得地磁偏航角锁定激光雷达的旋转，尝试获得更高的精度
-                laser_imu_fusion(data_last, Current_euler.x, Current_euler.y, 90. * M_PI / 180. - Current_euler.z);  // z旋转角 = 雷达安装角 + 飞机偏航角
+                /// 数据预处理               
+                //laser_imu_fusion(data, Current_euler.x, Current_euler.y, 90. * M_PI / 180. - Current_euler.z);       // 利用飞控测得地磁偏航角锁定激光雷达的旋转，尝试获得更高的精度
+                //laser_imu_fusion(data_last, Current_euler.x, Current_euler.y, 90. * M_PI / 180. - Current_euler.z);  // z旋转角 = 雷达安装角 + 飞机偏航角
+                laser_imu_fusion(data,      0., 0., __lidar_install_angle - Current_euler.z);
 
                 /// 点云配准
                 reg->set_Src_PointCloud(data_last);
@@ -84,7 +94,7 @@ int main_rplidar(int argc, char *argv[]) {
                 // 位置更新
                 x_body_last = x_body; y_body_last = y_body;
                 //x_body = x_gnd, y_body = y_gnd, z_body = 0.;
-                double yaw_t = -(90. * M_PI / 180. - Current_euler.z);                                              // OFFSET
+                double yaw_t = -(__lidar_install_angle - Current_euler.z);                                              // OFFSET
                 x_body = cos(yaw_t) * x_gnd + -sin(yaw_t) * y_gnd;
                 y_body = sin(yaw_t) * x_gnd +  cos(yaw_t) * y_gnd;
                 //位置微分得到速度
