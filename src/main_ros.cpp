@@ -61,6 +61,10 @@ int main_ros(int argc, char *argv[]) {
     ros::Publisher vision_pos_pub_mocap = nh.advertise<geometry_msgs::PoseStamped>
             ("mavros/fake_gps/mocap/pose", 5);
 
+    ros::ServiceClient set_home_client = nh.serviceClient<mavros_msgs::CommandHome>
+            ("mavros/cmd/set_home");
+    mavros_msgs::CommandHome home_pos;
+
 //    mavros_msgs::HilGPS fake_gps;
     geometry_msgs::PoseStamped vision_pose;
 
@@ -70,10 +74,16 @@ int main_ros(int argc, char *argv[]) {
     ros::ServiceClient stream_rate_client = nh.serviceClient<mavros_msgs::StreamRate>
             ("mavros/set_stream_rate");
     mavros_msgs::StreamRate stream_rate;
-    stream_rate.request.stream_id = 0;      // STREAN)AKK
+    stream_rate.request.stream_id = 0;      // STREAM
     stream_rate.request.message_rate = 20;
     stream_rate.request.on_off = true;
     stream_rate_client.call(stream_rate);
+
+    home_pos.request.current_gps = false;
+    home_pos.request.latitude  = 24.47   * 1e7;
+    home_pos.request.longitude = 118.06 * 1e7;
+    home_pos.request.altitude  = 50. * 1e3;
+
 
     // wait for FCU connection
     while(ros::ok() && !current_state.connected){
@@ -82,33 +92,53 @@ int main_ros(int argc, char *argv[]) {
         rate.sleep();
     }
 
+    for (int i = 0; i < 3; i++) {
+        set_home_client.call(home_pos);
+        ros::spinOnce();
+        rate.sleep();
+    }
+
     ros::Time last_request = ros::Time::now();
 
     while(ros::ok()){
 
-        if (is_ctrl_rc_updated) {
+        //if (is_ctrl_rc_updated) {
             // Vision
             vision_pose.header.stamp = ros::Time::now();
-            vision_pose.pose.position.x = -x_body / 100.;          //  y_body / 100. //  x_body
-            vision_pose.pose.position.y =  y_body / 100.;          // -x_body / 100. // -y_body
-            vision_pose.pose.position.z = alt_global;
-            vision_pose.pose.orientation.x = current_imu_raw.orientation.x;
-            vision_pose.pose.orientation.y = current_imu_raw.orientation.y;
-            vision_pose.pose.orientation.z = current_imu_raw.orientation.z;
-            vision_pose.pose.orientation.w = current_imu_raw.orientation.w;
+            vision_pose.pose.position.x = -y_gnd / 100.;          //  x_body / 100. //  x_body
+            vision_pose.pose.position.y = -x_gnd / 100.;          // -y_body / 100. // -y_body
+            vision_pose.pose.position.z = -alt_global;
+//          vision_pose.pose.orientation.x = current_imu_raw.orientation.x;
+//          vision_pose.pose.orientation.y = current_imu_raw.orientation.y;
+//          vision_pose.pose.orientation.z = current_imu_raw.orientation.z;
+//          vision_pose.pose.orientation.w = current_imu_raw.orientation.w;
+            vision_pose.pose.orientation.x = 0.;
+            vision_pose.pose.orientation.y = 0.;
+            vision_pose.pose.orientation.z = 0.;
+            vision_pose.pose.orientation.w = 0.;
 
+            /// Debuging
+            vision_pose.pose.position.x = 2;          //  x_body / 100. //  x_body
+            vision_pose.pose.position.y = -1;          // -y_body / 100. // -y_body
+            vision_pose.pose.position.z = 3.2;
+
+            // 发过去是以Vision Position Estimation帧收到
+            // ROS:ENU->Autopilot:NED
+            // 然后注意激光求的是相对运动，所以最后算出来是个反的结果，要在上述基础上取反
             vision_pos_pub.publish(vision_pose);
 
             // Fake GPS/ENU
-            vision_pose.pose.position.x = -x_gnd / 100.;            // lat
-            vision_pose.pose.position.y =  y_gnd / 100.;            // lon
+//          vision_pose.pose.position.x = -x_gnd / 100.;            // lat
+//          vision_pose.pose.position.y =  y_gnd / 100.;            // lon
 
-            //vision_pos_pub_mocap.publish(vision_pose);
+            // 发过去是以HIL_GPS接收
+            // 初始坐标
+            //vision_pos_pub_mocap.publish(vision_pose);              // NED: x = -y_gnd, y = -x_gnd;
 
-            cout << "x_body: " << vision_pose.pose.position.x << "\t y_body:: " << vision_pose.pose.position.y << endl;
+            cout << "x_body: " << vision_pose.pose.position.x << "\t y_body:: " << vision_pose.pose.position.y << " yaw: " << Current_euler.z << endl;
 
             is_ctrl_rc_updated = false;
-        }
+        //}
 
         last_request = ros::Time::now();
         ros::spinOnce();

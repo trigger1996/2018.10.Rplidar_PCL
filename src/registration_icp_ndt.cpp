@@ -76,10 +76,15 @@ int __registration_icp_ndt::update() {
 
     /// 显示
     if (is_show) {
+        pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> color_src(cloud_last, 0,   255, 0);
+        pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> color_ref(cloud,      128, 0,   128                                                                              );
+
         viewer->removePointCloud(ref_cloud_name);
         viewer->removePointCloud(src_cloud_name);
-        viewer->addPointCloud<pcl::PointXYZ> (cloud_last, src_cloud_name);
-        viewer->addPointCloud<pcl::PointXYZ> (cloud, ref_cloud_name);
+
+        viewer->addPointCloud<pcl::PointXYZ> (cloud_last, color_src, src_cloud_name);
+        viewer->addPointCloud<pcl::PointXYZ> (cloud, color_ref, ref_cloud_name);
+
         viewer->spinOnce(5);
         boost::this_thread::sleep(boost::posix_time::microseconds(5));
 
